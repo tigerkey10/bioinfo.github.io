@@ -4,5 +4,6 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+## 머신러닝, 딥러닝, 데이터사이언스에 관심이 많습니다.
+
+공부한 내용들을 제 언어로 바꾸어 기록합니다.
