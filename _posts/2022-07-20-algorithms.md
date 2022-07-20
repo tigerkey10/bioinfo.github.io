@@ -130,7 +130,7 @@ plt.bar(range(100), insert_sort(x2))
 
 *전체 과정은 분리 $\Rightarrow$ 병합. 
 
-### <분리>
+### \<분리\>
 - 분리조건: 리스트 크기 $> 1$ 일 때; 리스트 크기 1 되면 분리 정지(=크기 1될 때 까지 분리)
 - 분리 기준점 설정 
 - 분리 기준점 기준 왼쪽으로 분리 
@@ -140,7 +140,7 @@ plt.bar(range(100), insert_sort(x2))
 
 오른쪽에 대해 다시 분리(+병합) 적용 
 
-### <병합>
+### \<병합\>
 - 왼쪽 오른쪽 크기 비교해서, 오름차순으로 원본리스트에 결합 
 
 *분리된 상태 = 정렬된 상태. 
@@ -151,17 +151,17 @@ b = 0 , 오른쪽 인덱스
 
 c = 0 , 전체 인덱스 
 
-while (a < len(left)) and (b < len(right)) : 
+while (a \< len(left)) and (b \< len(right)) : 
 
-if left[ a ] > right[ b ] : list[ c ] = right[ b ], b+= 1
+if left[ a ] \> right[ b ] : list[ c ] = right[ b ], b+= 1
 
 else: list[ c ] = left[ a ], a+= 1 
 
 c += 1 
 
-while (a < len(left)) : list[ c ] = left[ a ], a += 1, c+= 1
+while (a \< len(left)) : list[ c ] = left[ a ], a += 1, c+= 1
 
-while (b < len(right)) : list[ c ] = right[ b ], b+= 1, c+= 1
+while (b \< len(right)) : list[ c ] = right[ b ], b+= 1, c+= 1
 
 return list, 정렬 결과 출력 
 
@@ -238,8 +238,8 @@ plt.bar(range(100), merge_sort(test))
 
 1. 거리 설정한다. 
 2. 정렬해야 할 원소 j와 j-distance 사이 값 비교한다. 
-3. j < j-distance 이면, j와 j-distance 값 위치 교환 , j = j-distance 로 새로 할당
-4. 3의 과정을 j-distance >=0 일 때 까지 반복한다. 
+3. j \< j-distance 이면, j와 j-distance 값 위치 교환 , j = j-distance 로 새로 할당
+4. 3의 과정을 j-distance \>=0 일 때 까지 반복한다. 
 
 ## 구현 
 
@@ -287,7 +287,7 @@ plt.show()
 
 $\Rightarrow$
 
-<다시 정리>
+\<다시 정리\>
 
 ### 교환
 - 정리 안 된 부분에서 가장 큰 값 찾는다. 
