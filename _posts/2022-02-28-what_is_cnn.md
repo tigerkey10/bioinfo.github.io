@@ -1,0 +1,730 @@
+---
+title : "[Keras/딥러닝 공부] 합성곱 신경망(CNN) 이론"
+excerpt : "공부한 내용을 기록한 글"
+
+categories : 
+- Data Science
+- python
+- Keras
+- deep learning
+
+tags : 
+- [ML, Deep learning, python, Keras, data science]
+
+toc : true 
+toc_sticky : true 
+use_math : true
+
+date : 2022-02-28
+last_modified_at : 2022-02-28
+
+---
+
+아래 내용은 '케라스 창시자에게 배우는 딥러닝 (프랑소와 슐레 저, 박해선 옮김, 길벗 출판사)' 을 공부한 뒤, 배운 내용을 제 언어로 정리.기록한 것 입니다. 
+
+---
+
+# 합성곱 신경망 
+
+## 기본 
+
+합성곱 층과 풀링 층 교차해서 쌓는 게 합성곱 신경망 기본 구조다. 
+
+<img width="779" alt="Screen Shot 2022-02-28 at 13 08 45" src="https://user-images.githubusercontent.com/83487073/155922507-8e1e81e1-b95a-4a24-b243-52ac56ec635a.png">
+
+[이미지 출처: http://taewan.kim/post/cnn/]
+
+## 완전 연결 층(Dense) 과 차이 
+
+완전 연결 층은 입력 이미지 전역패턴 학습하지만, 합성곱 층은 입력 이미지 지역 패턴 학습한다. 
+
+## 특징 
+
+- 평행이동 불변성: 평행이동 된 지역 패턴은 같은 패턴으로 인식한다. 이는 합성곱 신경망이 효율적으로 지역 패턴 학습하게 한다. 또, 인간 두뇌가 객체 인식하는 방법과 같다. 
+- 객체를 계층적 인식: 컨브넷은 객체를 계층적으로 인식한다. 각 위치 에지, 질감에서 시작해서 귀, 코, 눈 등 더 상위 개념을 순차.계층적으로 인식해간다. 두뇌가 객체 인식하는 방법과 같다. 
+
+---
+
+# 합성곱 연산 
+
+합성곱 층은 입력 이미지 받아 합성곱 연산 수행하고, 결과 출력한다. 
+
+합성곱 연산은 입력 이미지 모든 위치에서 지역 패턴들 추출한다. 
+
+- 지역패턴에는 에지(Edge), 질감(Texture) 등 포함된다. 
+
+## 합성곱 연산 과정 
+
+1. 입력 이미지 위를 3 $\times$ 3 또는 5 $\times$ 5 크기 윈도우가 슬라이딩(Sliding) 하며 3 $\times$ 3 또는 5 $\times$ 5 크기 패치(Patch:작은 조각) 추출한다. (윈도우 사이즈 크기 패치 추출한다)
+2. 각 패치와. 에지, 질감 등 지역 특징 담고있는 필터(또는 커널)를 요소별 텐서 곱 연산 한다. 
+3. 텐서 곱 연산 결과 모두 합한다. 곧, 2 과정은 패치 각 요소를 가중합 한 것과 같다. 
+4. 3 결과를 특성 맵(Feature Map) 또는 응답 맵(Responsse Map) 이라고 한다. 입력 이미지 각 위치에 그 필터 패턴이 나타나 있었는지 확인.응답한 결과다. 
+
+- 입력 이미지 각 채널(예: RGB 3개) 별로 각각 다른 필터 적용된다. 
+- 1개 합성곱 층에서 입력 이미지에 대해 여러 개 필터 적용한다(예: 32개, 64개, 128개...).
+- 보통 1개 합성곱 층 필터 개수는 하위 층에서 상위 층 갈 수록 2 제곱 수로 점차 증가시켜 간다. 
+- 일반 경우, 합성곱 하위 층에서 상위 층(더 깊은 층) 갈 수록, 각 층의 출력 특성 맵 크기는 줄어든다. 
+
+### 위 과정 그림으로 그리면 아래와 같다. 
+
+## 입력 이미지와 필터
+
+<img width="494" alt="Screen Shot 2022-02-28 at 11 14 01" src="https://user-images.githubusercontent.com/83487073/155913072-0e8cbfcd-6627-4ce4-8e9b-157620bdfe26.png">
+
+## 입력 이미지 위를 윈도우가 슬라이딩 하면서 패치 추출, 패치와 필터 합성곱 
+
+<img width="645" alt="Screen Shot 2022-02-28 at 11 15 43" src="https://user-images.githubusercontent.com/83487073/155913181-76c9bc3c-b53a-4143-8320-1ede1e2063c8.png">
+
+<img width="669" alt="Screen Shot 2022-02-28 at 11 16 26" src="https://user-images.githubusercontent.com/83487073/155913246-8a1953b3-6294-49f4-b97e-d17eedd139e1.png">
+
+<img width="642" alt="Screen Shot 2022-02-28 at 11 16 47" src="https://user-images.githubusercontent.com/83487073/155913282-76dc0405-9a0c-4354-8367-3b31704782d2.png">
+
+<img width="653" alt="Screen Shot 2022-02-28 at 11 17 43" src="https://user-images.githubusercontent.com/83487073/155913362-0a4ed507-24f6-4025-bc02-3ea0dc8ee7ac.png">
+
+<img width="655" alt="Screen Shot 2022-02-28 at 11 18 09" src="https://user-images.githubusercontent.com/83487073/155913393-ff68e647-e263-4304-9499-816cdb6aea72.png">
+
+<img width="635" alt="Screen Shot 2022-02-28 at 11 21 22" src="https://user-images.githubusercontent.com/83487073/155913631-cbe1bdf2-9a36-4ea4-b0e2-5fc49705b9cb.png">
+
+<img width="636" alt="Screen Shot 2022-02-28 at 11 21 44" src="https://user-images.githubusercontent.com/83487073/155913652-b6af1f74-6cf5-449b-afe8-3cc42b8d7ae4.png">
+
+<img width="636" alt="Screen Shot 2022-02-28 at 11 22 03" src="https://user-images.githubusercontent.com/83487073/155913680-3b15c7d4-7a21-4659-8373-f6d7555eb545.png">
+
+<img width="639" alt="Screen Shot 2022-02-28 at 11 22 33" src="https://user-images.githubusercontent.com/83487073/155913723-bae7f10c-d4ec-4f6c-a88c-987499e79c60.png">
+
+- 3개 채널 합성곱 결과 행렬을 요소별로 합 한게 필터 1개에 대한 최종 출력 특성 맵 이다. 
+- 이게 필터 수 만큼의 차원을 이룬다. 
+
+---
+
+# 패딩(Padding)
+
+## Zero Padding
+
+입력 특성 맵과 출력 특성 맵 크기를 같게 하고 싶으면 입력 특성 맵에 패딩(Padding) 추가하면 된다. 
+
+입력 특성 맵 가장자리에 적절한 개수 행과 열 추가하는 걸 패딩이라 한다. 
+
+패딩 자리에 보통 0 넣기 때문에, 제로 패딩 이라고도 한다. 
+
+<img width="363" alt="Screen Shot 2022-02-28 at 11 30 45" src="https://user-images.githubusercontent.com/83487073/155914321-d990fb37-5103-4efb-8a0f-b86b7d416739.png">
+
+빈 부분이 패딩 자리다. 
+
+위 행렬에 대해 합성곱 하면 출력 특성 맵 크기가 입력 특성 맵과 같아진다 $(5*5)$
+
+## 케라스에서 패딩 사용하기 
+
+- Conv2D 층에서 padding 파라미터 설정하면 된다. 'valid' 는 패딩 사용 안함, 'same'은 패딩 사용함 이다. 
+- 기본 파라미터는 valid (패딩 사용 안함) 이다. 
+
+---
+
+# 스트라이드(Stride) 
+
+보폭. 
+
+## 정의 
+
+연속한 두 윈도우 사이 거리를 스트라이드 라고 한다. 
+
+- 스트라이드 값 기본은 $1$ 이다. 
+
+## 예) 스트라이드 = 2 인 경우 
+
+<img width="434" alt="Screen Shot 2022-02-28 at 11 43 53" src="https://user-images.githubusercontent.com/83487073/155915387-085cdb09-c087-4a13-8657-073b094d691f.png">
+
+<img width="601" alt="Screen Shot 2022-02-28 at 11 44 12" src="https://user-images.githubusercontent.com/83487073/155915422-094f1c9e-a64c-4088-bb05-7455608e4f6f.png">
+
+<img width="592" alt="Screen Shot 2022-02-28 at 11 44 32" src="https://user-images.githubusercontent.com/83487073/155915461-4e0130ec-f182-4eea-85c9-7d9e3227cf79.png">
+
+<img width="588" alt="Screen Shot 2022-02-28 at 11 44 51" src="https://user-images.githubusercontent.com/83487073/155915499-e7964ea9-252f-498a-9162-f69b560c8bde.png">
+
+출력 특성 맵 크기 $(4 \times 4)$ 가 입력 특성 맵 크기 $(5 \times 5)$ 보다 작아졌다(다운샘플링). 
+
+---
+
+# 최대 풀링 연산
+
+합성 곱 층 출력 특성맵 받아 다운샘플링 하는 연산이다. 
+
+$2*2$ 윈도우와 스트라이드 $2$ 사용해서, 패치 별로 최댓값만 추출한다. 
+
+- 평균 풀링 연산 사용할 수도 있다. 패치 영역 내 평균을 추출한다. 
+
+## 최대 풀링 연산 목적 
+
+- 입력을 다운샘플링 해서, 특성 맵 가중치 개수를 줄인다. 
+- 모델이 공간적 계층 구조 학습하는 걸 돕는다. 
+
+## 최대 풀링 연산 예시 
+
+<img width="382" alt="Screen Shot 2022-02-28 at 12 00 05" src="https://user-images.githubusercontent.com/83487073/155916875-581fe612-b05e-4807-a533-0387b20451ec.png">
+
+<img width="361" alt="Screen Shot 2022-02-28 at 12 01 49" src="https://user-images.githubusercontent.com/83487073/155917093-9931f7f7-9582-4867-8498-58ac40a5cdf4.png">
+
+<img width="355" alt="Screen Shot 2022-02-28 at 12 02 04" src="https://user-images.githubusercontent.com/83487073/155917110-d0045263-9309-4466-bcb6-95dd571c8daa.png">
+
+<img width="355" alt="Screen Shot 2022-02-28 at 12 02 20" src="https://user-images.githubusercontent.com/83487073/155917130-987d9d55-ab02-4329-a3b7-984a4f38c826.png">
+
+---
+
+# 간단한 컨브넷 만들기 
+
+MNIST 이미지 분류하는 간단한 컨브넷 만들기 
+
+```python 
+from keras import layers 
+from keras import models 
+
+# 간단한 컨브넷 작성 
+# 이미지 특징 추출 층(합성곱 기반 층)
+model = models.Sequential() 
+model.add(layers.Conv2D(32, (3,3), activation='relu', input_shape=(28, 28, 1))) # 필터 수, 패치 사이즈(3X3), 요소별 적용할 활성화 함수, 입력 특성 맵 사이즈 
+model.add(layers.MaxPooling2D((2,2))) 
+model.add(layers.Conv2D(64, (3,3), activation='relu')) # activation='relu': 음수, 0은 모두 0으로 만들고. 양수 값만 남긴다. 
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.Conv2D(64, (3,3), activation='relu'))
+model.add(layers.Flatten()) # 특성공학 결과물 1차원 텐서(벡터)로 변환하는 층 
+
+# 완전 연결 분류기 
+model.add(layers.Dense(64, activation='relu'))
+model.add(layers.Dense(10, activation='softmax')) # 출력층: 최상위층, 분류 결과물 확률 꼴로 변환.
+
+# 모델 설계 결과 요약 
+model.summary()
+```
+<img width="494" alt="Screen Shot 2022-02-28 at 12 09 55" src="https://user-images.githubusercontent.com/83487073/155917757-b6189319-c5b6-4b83-b4f4-304e44a80840.png">
+
+- 합성곱 층과 최대 풀링 층 교차해서 쌓은. 전형적인 컨브넷 구조다. 
+- 합성곱 층 파라미터 별 의미: 입력 특성 맵에 적용할 필터 수(32), 윈도우 크기(3 $\times$ 3), 활성화 함수(렐루함수), 입력 특성 맵 크기. 
+- 최대 풀링 층 파라미터 의미: 윈도우 크기(2 $\times$ 2)
+- Flatten() 층: 특성공학 결과를 1차원 텐서(벡터)로 변환하는 층. Dense 층에 넣기 위함이다. 
+
+## MNIST 숫자 이미지 합성곱 신경망으로 분류 
+
+```python 
+# MNIST 숫자 이미지 합성곱 신경망으로 분류 
+from keras.datasets import mnist 
+from tensorflow.keras.utils import to_categorical 
+
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data() 
+
+train_images = train_images.reshape((60000, 28, 28, 1)) # 6만개 배치, 높이 28, 너비 28, 채널 1 사이즈로 크기 조정 
+train_images = train_images.astype('float32') / 255
+
+test_images = test_images.reshape((10000, 28, 28, 1)) # 1만개 배치, 높이 28, 너비 28, 채널 1 사이즈로 크기 조정 
+test_images = test_images.astype('float32') / 255 # 전부 부동소수점 실수로 변환 + 1/255 로 스케일 조정 
+
+train_labels = to_categorical(train_labels) # train_label 들을 모두 원핫 인코딩 벡터로 변환 # 분류 결과와 크로스엔트로피 비교하기 위함 
+test_labels = to_categorical(test_labels) 
+
+# 모델 컴파일 
+model.compile(
+    optimizer = 'rmsprop', 
+    loss = 'categorical_crossentropy', 
+    metrics = ['accuracy']
+)
+
+# 모델 학습 
+model.fit(
+    train_images, 
+    train_labels, 
+    epochs = 5, 
+    batch_size=64, 
+    validation_data = (test_images, test_labels)
+)
+
+test_loss, test_acc = model.evaluate(test_images, test_labels) ; print(test_acc)
+# 98% 정도 정확도 기록함. 
+```
+<img width="607" alt="Screen Shot 2022-02-28 at 12 11 05" src="https://user-images.githubusercontent.com/83487073/155917863-cca137b7-5397-4c81-a866-8411d57e4b1a.png">
+
+---
+
+# 간단한 컨브넷 밑바닥 부터 훈련시키기 
+
+## 개 vs 고양이 분류 컨브넷 정의
+
+```python 
+# 네트워크 구성 
+
+from keras import layers 
+from keras import models 
+
+model = models.Sequential() 
+model.add(layers.Conv2D(32, (3,3), activation='relu', input_shape=(150,150,3))) # 입력 특성 맵에 적용 할 필터 수: 32, 윈도우 사이즈, 활성화함수, 입력 데이터 규격: 150*150, RGB 3 채널 
+model.add(layers.MaxPooling2D((2,2))) # 최대 풀링 연산 적용할 윈도우 사이즈 - 다운샘플링(크기 축소)
+model.add(layers.Conv2D(64, (3,3), activation='relu')) # 입력 특성 맵에 적용할 필터 수:64, 윈도우 사이즈, 활성화 함수 
+model.add(layers.MaxPooling2D((2,2))) # 윈도우 사이즈 
+model.add(layers.Conv2D(128, (3,3), activation='relu')) # 필터 수: 128개, 윈도우 사이즈 
+model.add(layers.MaxPooling2D((2,2))) # 윈도우 사이즈 
+model.add(layers.Conv2D(128, (3,3), activation='relu')) # 필터 수: 128개, 윈도우 사이즈 
+model.add(layers.MaxPooling2D(2,2)) # 윈도우 사이즈 
+# 여기까지 합성곱 기반 층(지역 패턴 추출 층)
+
+# 여기서부터 완전 연결 층(전역 패턴 추출, 분류기)
+model.add(layers.Flatten()) # 1차원 텐서(벡터)로 변환
+model.add(layers.Dense(512, activation='relu')) # 512차원 벡터공간에 투영 
+model.add(layers.Dense(1, activation='sigmoid'))
+
+model.summary()
+# 1. 150*150 입력 이미지에서 3*3 윈도우 슬라이딩하면서 3*3 패치 추출 -> 32개 필터에 대해 합성곱 -> 148*148*32 
+# 2. 2*2 윈도우 1의 출력 특성 맵에 적용해서 패치 구역 별 최댓값만 추출 -> 출력 특성 맵 크기 절반으로 줄어든다 -> 74*74*32 
+# 3. 2의 출력 특성 맵에서 다시 3*3 패치 추출 -> 64개 필터에 대해 합성곱 -> 72*72*64 
+# 4. 2 처럼 최대 풀링 연산 3 출력에 적용 -> 출력 특성 맵 크기 절반으로 줄어든다 -> 36*36*64 
+# 5. 3*3 패치, 128개 필터에 대해 합성곱 -> 34*34*128 
+# 6. 최대 풀링 연산 적용 -> 17*17*128 
+# 7. 3*3 패치, 128개 필터에 대해 합성곱 -> 15*15*128 
+# 8. 최대 풀링 연산 적용 -> 7*7*128 
+# 9. 완전 연결 분류기 주입 위해 1차원 텐서(벡터)로 변환하는 층 
+# 10. 512차원 벡터공간에 투영 
+# 11. 1차원 벡터공간으로 차원축소 후 시그모이드 함수 적용 
+```
+<img width="512" alt="Screen Shot 2022-02-28 at 12 13 05" src="https://user-images.githubusercontent.com/83487073/155917989-515f8785-f532-46f7-90e8-85fef80608da.png">
+
+## 모델 컴파일 
+
+```python 
+# 모델 컴파일 
+
+from keras import optimizers 
+
+model.compile(
+    loss = 'binary_crossentropy',
+    optimizer = optimizers.adam_v2.Adam(learning_rate=0.001), 
+    metrics=['acc']
+)
+```
+
+## 데이터 전처리 
+
+```python 
+# 데이터 전처리 
+
+from keras.preprocessing.image import ImageDataGenerator 
+
+train_datagen = ImageDataGenerator(rescale=1./255) # 스케일 1/255 로 조정 , 부동소수점 형태로 변환 
+test_datagen = ImageDataGenerator(rescale=1./255) # 스케일 조정 
+
+train_generator = train_datagen.flow_from_directory(
+    '/Users/kibeomkim/Desktop/cats_and_dogs_small/train', 
+    target_size=(150, 150), # 네트워크 입력 규격에 맞게 크기 변환 
+    batch_size=20, # 1에폭 동안 투입 할 데이터 묶음 
+    class_mode = 'binary' # 데이터가 이진 레이블임. 
+)
+
+valid_generator = test_datagen.flow_from_directory(
+    '/Users/kibeomkim/Desktop/cats_and_dogs_small/test', 
+    target_size=(150,150), 
+    batch_size=20, 
+    class_mode='binary'
+)
+
+# 모델 훈련 
+
+history = model.fit_generator(
+    train_generator, 
+    steps_per_epoch= 100, # 20*100 = 총 훈련 데이터 갯수 
+    epochs = 30 , 
+    validation_data = valid_generator, 
+    validation_steps = 50 
+)
+```
+
+## 훈련 및 검증 정확도, 훈련 및 검증 손실 시각화 
+
+```python 
+acc = history.history['acc']
+val_acc = history.history['val_acc']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+epochs = range(1, len(acc) + 1)
+
+plt.figure(figsize=(10,5))
+
+plt.subplot(1,2,1)
+plt.plot(epochs, acc, 'bo', label='Training Accuracy')
+plt.plot(epochs, val_acc, 'r', label='Validation Accuracy')
+plt.title('Training and Validation Accuracy')
+plt.legend() 
+
+plt.subplot(1,2,2)
+plt.plot(epochs, loss, 'bo', label='Tranining Loss')
+plt.plot(epochs, val_loss, 'r', label='Validation Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+
+plt.suptitle('Accuracy & Loss')
+plt.tight_layout()
+
+plt.show() 
+```
+<img width="666" alt="Screen Shot 2022-02-28 at 12 14 40" src="https://user-images.githubusercontent.com/83487073/155918102-8281b39e-a1fe-4079-b962-8b37f9f9c965.png">
+
+과대적합 억제하는 가장 좋은 방법 = 훈련 데이터 수 늘리는 거다. 
+
+데이터 증식 사용해 과대적합 억제해보자.
+
+```python 
+# 데이터 증식 
+
+datagen = ImageDataGenerator(
+    rotation_range=30, # 회전을 몇 도 시킬 건가 
+    width_shift_range=0.1, # 수평으로 평행이동 정도 
+    height_shift_range=0.1, # 수직으로 평행이동 정도 
+    shear_range=0.2,  # y축 방향으로 각도 증가 
+    zoom_range=0.5,  # 확대/축소 범위
+    horizontal_flip=True, # 좌우 대칭시킨다
+    fill_mode='nearest' 
+)
+
+# 데이터 증식 결과 시각화해서 살펴보기 
+from keras.preprocessing import image 
+
+fnames = sorted([os.path.join('/Users/kibeomkim/Desktop/cats_and_dogs_small/train/cats', fname) for fname in os.listdir('/Users/kibeomkim/Desktop/cats_and_dogs_small/train/cats')])
+img_path = fnames[7]
+
+img = image.load_img(img_path, target_size = (150,150))  # 이미지 읽어오기, 크기 150*150으로 변환 
+
+x = image.img_to_array(img) # (150,150,3) 크기 넘파이 배열(텐서)로 변환 
+x = x.reshape((1,)+x.shape) # (1,150,150,3) 으로 변환 (배치 차원 추가)
+
+plt.figure(figsize=(5,5))
+i = 1
+for batch in datagen.flow(x, batch_size=1) : 
+    plt.subplot(2,2,i) # i번째 이미지 
+    imgplot = plt.imshow(image.array_to_img(batch[0]))
+    plt.xticks([])
+    plt.yticks([])
+    i += 1 
+    if i == 5 : break 
+plt.tight_layout()
+plt.show()
+```
+<img width="654" alt="Screen Shot 2022-02-28 at 12 15 31" src="https://user-images.githubusercontent.com/83487073/155918159-2da575ba-86f8-4382-8100-db620716b07a.png">
+
+데이터 증식 적용하더라도, 애초에 훈련 데이터 수가 적기 때문에 과대적합 억제하는 데 충분치 않을 수 있다. 
+
+모델에 드롭아웃 추가해서 과대적합을 좀 더 억제해 보자. 
+
+```python 
+# 드롭아웃 포함한 새로운 컨브넷 정의 
+
+from keras import models 
+from keras import layers 
+from keras import optimizers
+
+model = models.Sequential() 
+# 합성곱 기반 층
+model.add(layers.Conv2D(32, (3,3), activation='relu', input_shape=(150,150,3)))
+model.add(layers.MaxPooling2D((2,2))) 
+model.add(layers.Conv2D(64, (3,3), activation='relu'))
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.Conv2D(128, (3,3), activation='relu'))
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.Conv2D(128, (3,3), activation='relu'))
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.Flatten())
+model.add(layers.Dropout(0.5))
+
+# 완전 연결 분류기 
+model.add(layers.Dense(512, activation='relu'))
+model.add(layers.Dense(1, activation='sigmoid'))
+
+# 모델 컴파일 
+model.compile(
+    loss = 'binary_crossentropy', 
+    metrics = ['acc'], 
+    optimizer = optimizers.adam_v2.Adam(lr = 0.001)
+)
+
+# 데이터 증식 & 전처리 
+
+train_datagen = ImageDataGenerator(
+    rescale = 1./255, 
+    rotation_range = 40, 
+    width_shift_range= 0.1, 
+    height_shift_range=0.1, 
+    shear_range = 0.4, 
+    zoom_range= 0.5, 
+    horizontal_flip=True 
+)
+
+test_datagen = ImageDataGenerator(
+    rescale=1./255
+)
+
+train_generator = train_datagen.flow_from_directory(
+    '/Users/kibeomkim/Desktop/cats_and_dogs_small/train', 
+    target_size=(150,150), 
+    batch_size= 20, 
+    class_mode='binary'
+)
+
+valid_generator = test_datagen.flow_from_directory(
+    '/Users/kibeomkim/Desktop/cats_and_dogs_small/test', 
+    target_size = (150,150), 
+    batch_size=20, 
+    class_mode = 'binary'
+)
+
+# 모델 훈련 
+history = model.fit_generator(
+    train_generator, 
+    steps_per_epoch=100, 
+    epochs = 100,
+    validation_data = valid_generator, 
+    validation_steps = 50 
+)
+
+model.save('/Users/kibeomkim/Desktop/models_saved/dog_and_cant.h5')
+```
+
+## 정확도 및 손실 
+
+```python 
+acc = history.history['acc']
+val_acc = history.history['val_acc']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+epochs = range(1, len(acc) + 1)
+
+plt.figure(figsize=(10,5))
+
+plt.subplot(1,2,1)
+plt.plot(epochs, acc, 'bo', label='Training Accuracy')
+plt.plot(epochs, val_acc, 'r', label='Validation Accuracy')
+plt.title('Training and Validation Accuracy')
+plt.legend() 
+
+plt.subplot(1,2,2)
+plt.plot(epochs, loss, 'bo', label='Tranining Loss')
+plt.plot(epochs, val_loss, 'r', label='Validation Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+
+plt.suptitle('Accuracy & Loss')
+plt.tight_layout()
+
+plt.show() 
+```
+<img width="728" alt="Screen Shot 2022-02-28 at 12 17 12" src="https://user-images.githubusercontent.com/83487073/155918308-48dc9487-7707-4443-a06e-f87aba757909.png">
+
+---
+
+# 컨브넷 학습 시각화 
+
+## 활성화 시각화 
+
+합성곱 층 출력에 요소 별로 활성화 함수 적용한 결과를 '활성화' 라고 한다. 
+
+이 활성화를 시각화 해서, 각 층의 의미 직접 눈으로 확인할 수 있다. 
+
+```python 
+from keras.models import load_model 
+
+# 저장한 작은 컨브넷 로드 
+model2 = load_model('/Users/kibeomkim/Desktop/models_saved/dog_and_cant.h5')
+model2.summary()
+```
+
+## '활성화' 시각화 
+
+```python 
+# 합성곱 층, 풀링 층 출력 시각화 
+# '활성화' 시각화 
+img_path = '/Users/kibeomkim/Desktop/cc.png'
+
+from keras.preprocessing import image 
+
+img = image.load_img(img_path, target_size=(150,150))
+img_tensor = image.img_to_array(img) # 텐서로 변환 
+img_tensor = np.expand_dims(img_tensor, axis=0) # 배치 축 추가 
+
+img_tensor /= 255.  # 1/255로 스케일 조정 
+
+print(img_tensor.shape)
+```
+(1, 150, 150, 3)
+
+```python 
+# 원본 이미지 출력 
+plt.figure(figsize=(2,2))
+plt.imshow(img_tensor[0])
+plt.xticks([])
+plt.yticks([])
+plt.show()
+```
+<img width="449" alt="Screen Shot 2022-02-28 at 12 22 08" src="https://user-images.githubusercontent.com/83487073/155918720-7d9b9521-6fe4-45e2-944b-b4b3851da5db.png">
+
+[고양이 이미지 출처: https://www.rd.com/list/black-cat-breeds/]
+
+```python 
+# 상위 8개 레이어 출력만 추출 
+from keras import models 
+
+layer_outputs = [layer.output for layer in model2.layers[:8]] # 상위 8개 레이어 출력 추출 
+
+# 특정 입력에 대한 출력 매핑하는 모형 
+activation_model = models.Model(inputs=model2.input, outputs=layer_outputs)
+# 하나 입력에 대해: 8개 출력 대응된다 (층 8개 출력 결과)
+
+# 예측모드로 모델 실행하기 
+activations = activation_model.predict(img_tensor) # img_tensor 1개 입력에 대해: 8개 층 각각에 통과시켜서 그 출력 반환 
+```
+## 첫번째 합성곱 층 12번째 필터의 활성화 맵 시각화 
+
+```python 
+# 첫번째 합성곱 층 활성화 맵 시각화 
+first_layer_activation_result = activations[0]
+print(first_layer_activation_result.shape) # 합성곱 결과: 높이 148, 너비 148, 배치 1, 필터 적용한 응답 맵 32개 
+
+# 응답 맵 32개 중 12번째 응답 맵 시각화 
+plt.figure(figsize=(2,2))
+plt.matshow(first_layer_activation_result[0, :,:,21], cmap='viridis')
+plt.xticks([])
+plt.yticks([])
+plt.show()
+```
+<img width="672" alt="Screen Shot 2022-02-28 at 12 23 12" src="https://user-images.githubusercontent.com/83487073/155918785-8e01b118-95d5-4e22-8c24-337482f60113.png">
+
+이 필터는 전체 에지를 감지하는 것 같다. 
+
+```python 
+first_layer_activation_result = activations[0]
+print(first_layer_activation_result.shape) # 합성곱 결과: 높이 148, 너비 148, 배치 1, 필터 적용한 응답 맵 32개 
+
+# 응답 맵 32개 중 2번째 활성화 맵 
+plt.figure(figsize=(2,2))
+plt.matshow(first_layer_activation_result[0, :,:,2], cmap='viridis')
+plt.xticks([])
+plt.yticks([])
+plt.show()
+```
+
+<img width="671" alt="Screen Shot 2022-02-28 at 12 25 16" src="https://user-images.githubusercontent.com/83487073/155918941-e7da373a-5dbd-4fad-bb0c-fdb522bd65ef.png">
+
+첫번째 층 두번째 필터는 도드라진 엣지 감지하는 것 같다.(고양이 귀 끝 부분)
+
+## 네트워크 모든 활성화 시각화 
+
+```python 
+# 네트워크 모든 활성화 시각화 
+layer_names = []
+for layer in model2.layers[:8] : # 상위 8개 층 이름들 추출 (그림 이름으로 사용)
+    layer_names.append(layer.name)
+print(layer_names)
+```
+['conv2d_13', 'max_pooling2d_11', 'conv2d_14', 'max_pooling2d_12', 'conv2d_15', 'max_pooling2d_13', 'conv2d_16', 'max_pooling2d_14']
+
+```python 
+images_per_row = 16
+
+for layer_name, layer_activation in zip(layer_names, activations) : # 층 - 활성화 매핑 
+    n_features = layer_activation.shape[-1] # 활성화 마다 채널 수 
+
+    size = layer_activation.shape[1] # 높이와 너비 어차피 같다. 
+
+    n_cols = n_features // images_per_row 
+    display_grid = np.zeros((size*n_cols, images_per_row*size))
+
+    for col in range(n_cols) : 
+        for row in range(images_per_row) : 
+            channel_image = layer_activation[0, :, :, col*images_per_row+row]
+            # 채널 이미지 스케일 조정 
+            # 정규화 
+            channel_image -= channel_image.mean() 
+            channel_image /= channel_image.std() 
+            
+            channel_image*=64 
+            channel_image += 128 
+            channel_image = np.clip(channel_image, 0, 255).astype('uint8')
+            display_grid[col*size : (col+1)*size, row*size:(row+1)*size] = channel_image
+
+    scale = 1./size 
+    plt.figure(figsize=(scale*display_grid.shape[1], scale*display_grid.shape[0]))
+    plt.title(layer_name)
+    plt.grid(False)
+    plt.imshow(display_grid, aspect='auto', cmap='viridis')
+    #plt.xticks([])
+    #plt.yticks([])
+plt.show()
+```
+<img width="732" alt="Screen Shot 2022-02-28 at 12 29 41" src="https://user-images.githubusercontent.com/83487073/155919292-c58833f0-86e9-4124-bf54-d7fa58070aba.png">
+
+<img width="728" alt="Screen Shot 2022-02-28 at 12 29 59" src="https://user-images.githubusercontent.com/83487073/155919328-8d63cf90-86c4-43b1-b779-1a6e414a6b28.png">
+
+<img width="731" alt="Screen Shot 2022-02-28 at 12 30 25" src="https://user-images.githubusercontent.com/83487073/155919356-55e6406d-dd2b-47bc-aefe-7334df52db2e.png">
+
+<img width="731" alt="Screen Shot 2022-02-28 at 12 30 46" src="https://user-images.githubusercontent.com/83487073/155919371-3a5dcb48-86c7-46a5-82ac-8438e3072c63.png">
+
+<img width="730" alt="Screen Shot 2022-02-28 at 12 31 13" src="https://user-images.githubusercontent.com/83487073/155919413-6bb3dad3-7b05-4e63-a556-f2cee0ceb573.png">
+
+<img width="729" alt="Screen Shot 2022-02-28 at 12 31 36" src="https://user-images.githubusercontent.com/83487073/155919440-c5619a4e-7735-4732-8674-6cb5bbab5b93.png">
+
+<img width="726" alt="Screen Shot 2022-02-28 at 12 31 55" src="https://user-images.githubusercontent.com/83487073/155919474-34ebbae4-0824-44b5-b691-386d31439d4b.png">
+
+<img width="729" alt="Screen Shot 2022-02-28 at 12 32 11" src="https://user-images.githubusercontent.com/83487073/155919519-3ffb699e-8eff-49e8-a4a9-5ec7e4e15624.png">
+
+상위 층으로 갈 수록 활성화 맵 의미 시각적 파악 어려워진다. 
+
+상위 층 갈 수록, 모델이 학습한 몇 가지 '고양이라면 갖고 있을 만한 주요 특징들'만 남게 된다. 
+
+곧, 상위 층 각 필터는 '고양이의 특징'들이다. 
+
+모델은 입력 이미지 위를 슬라이딩 하면서 자신이 학습한 '고양이 특징'들이 입력 이미지에 나타나 있는지 확인한다. 
+
+위 마지막 이미지가 듬성듬성 빈 건, 입력 이미지가 모델이 학습한 고양이 특징들 중 일부를 안 갖고 있었다는 말이다. 곧, 필터에 응답 발생하지 않았다. 
+
+결과로 나온 활성화 맵 하나하나가 추상화 된 고차원적 의미 담게 된다. 예컨대 고양이 귀, 입, 눈 등이다. 
+
+CNN이 객체를 인식하는 방법은 인간 두뇌가 현실세계의 객체 인식하는 방법과 매우 유사하다. 
+
+<img width="761" alt="Screen Shot 2022-02-28 at 12 58 10" src="https://user-images.githubusercontent.com/83487073/155921668-552ea175-ea4e-4239-99cd-f96c62d63dc2.png">
+
+[오른쪽 고양이 사진 출처: https://petdoc.co.kr/ency/280]
+
+- 기억에 의존해 그린 고양이 얼굴 / 실제 고양이 사진
+
+우리 인간은 객체를 주요 특징 몇 가지를 가지고 인식한다. 기억에 의존해 고양이 얼굴을 그릴 때 나는 머릿속으로 생각했다. 
+
+- 고양이는 뾰족한 귀가 있다. 
+- 고양이는 입, 코, 그리고 눈이 있다. 
+- 얼룩 고양이 였다. 
+- 고양이는 인중에 콧수염이 있다. 
+
+고양이에 대한 추상화 된 몇 가지 특징들만 가지고 '이것은 고양이다'라고 인식했다. 
+
+세부 디테일은 기억하지 않는다. 온전하게 기억할 수도 없다. 
+
+세부 디테일은 가지치기 하고 주요 특징 만을 기억하고. 객체 인식한다.
+
+### CNN 모델도 그러하다. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
