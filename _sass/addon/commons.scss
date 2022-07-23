@@ -660,8 +660,10 @@ $sidebar-display: "sidebar-display";
 
     &:hover {
       @include no-text-decoration;
-
+      /*
       color: var(--sidebar-active-color) !important;
+      */
+      color: rgb(101, 12, 226);
     }
   }
 
