@@ -1,6 +1,6 @@
 ---
 layout: archives
-title: Archives
+title: 타임라인
 icon: fas fa-archive
 order: 3
 ---
