@@ -100,7 +100,7 @@ plt.show()
 
 <img width="765" alt="Screen Shot 2021-07-21 at 23 10 29" src="https://user-images.githubusercontent.com/83487073/126502993-f3953403-2743-484f-8fff-f2babb21da0e.png">
 
----
+
 
 
 
