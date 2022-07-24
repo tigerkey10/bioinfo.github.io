@@ -15,7 +15,7 @@ toc_sticky : true
 use_math : true
 
 date : 2022-07-22
-last_modified_at : 2022-07-22
+last_modified_at : 2022-07-24
 
 ---
 
@@ -193,6 +193,64 @@ tsp(brute_force, generate_cities(10))
 <img width="476" alt="Screen Shot 2022-07-22 at 23 38 35" src="https://user-images.githubusercontent.com/83487073/180462899-1d084c11-566a-4fb6-b2a1-39479c23b1ed.png">
 
 ---
+
+## 문제 해결 전략 2: 탐욕 알고리듬(그리디 알고리듬)
+
+무차별 대입 전략은 방문해야 할 도시 수가 적을 때는 정확한 정답 찾는 유용한 문제해결 전략이다. 
+
+하지만 방문해야 할 도시 수가 많아지면 많아질 수록, 가능한 후보 경로 수가 기하급수적으로 많아진다($n-1!$). 이 경우에 무차별 대입 전략 사용할 경우 말 그대로 억겁의 시간이 걸릴 수 있다. 
+
+곧, 방문할 도시 수가 많은 경우엔 무차별 대입 전략은 사용하기 부적절하다. 
+
+### 무차별 대입전략을 적용하기 어려운 경우에 대해(도시 수를 크게 늘려서), 
+
+탐욕 알고리듬을 적용해서 총 여정 경로 최소가 되는 투어 경로 찾아보자. 
+
+### 탐욕 알고리듬 
+
+```python 
+# 그리디 알고리즘 
+def greedy_algorithm(cities, start=None) : 
+    c = start or first(cities) # 여정 시작 도시 
+
+    # 여정 
+    tour = [c]
+    
+    # 방문 안 한 곳
+    unvisited = set(cities - {c})
+
+    while unvisited : # 방문 안 한 곳이 남아 있는 한
+        c = nearest_neighbor(c, unvisited) # 가장 가까운 도시 
+        tour.append(c) # 여정 생성 
+        unvisited = unvisited - {c} # 방문안 한 곳 리스트에서 이번에 방문한 도시 제거 
+
+    return tour 
+
+def first(cities) : return next(iter(cities)) 
+def nearest_neighbor(start, cities) : return min(cities, key= lambda c : distance_point(c, start))
+```
+
+### 탐욕 알고리듬으로 문제해결 실행; 5000개 도시 있을 때 최단 경로 찾기 
+
+```python 
+# 도시 수 : 5000개 
+tsp(greedy_algorithm, generate_cities(5000))
+```
+
+무차별 대입 전략 : 4921 cities => tour length : 24055 (in 2.7062 sec)
+
+<img width="598" alt="Screen Shot 2022-07-24 at 15 12 07" src="https://user-images.githubusercontent.com/83487073/180634794-4b2970dc-8a05-481b-9549-ecbe73077883.png">
+
+매 순간 최적 선택지(거리 가장 가까운 도시) 선택하는 탐욕 알고리듬은 단 2.7초 만에 최단 투어 경로 찾아냈다. 
+
+탐욕 알고리듬이 더 많은 도시 개수에도 불구하고, 도시 10개 밖에 안 되는데 10초 넘게 걸렸던 무차별 대입전략 보다 약 5배 빨랐다. 
+
+다만, 탐욕 알고리듬은 근사 알고리듬이기 때문에, 이 알고리듬이 찾은 정답은 전역 최적해가 아닐 수 있다. 즉, 거시적 관점에서 전체 도시와 경로를 보면 탐욕 알고리듬이 찾은 경로가 최단 경로가 아닐 수 있다. 
+
+
+
+
+
 
 
 
