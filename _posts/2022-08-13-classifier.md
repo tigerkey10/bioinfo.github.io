@@ -262,6 +262,87 @@ plt.show()
 
 이 경우, 로지스틱 회귀모형은 xgboost 모형보다 분류 정확성이 떨어졌다.
 
+## 로지스틱 회귀모형으로 분류문제 해결하기 - 2
+
+날씨 예측하기 
+
+```python 
+# 데이터셋 로드 
+df = pd.read_csv('/Users/kibeomkim/Desktop/weather.csv')
+df
+```
+<img width="1110" alt="Screen Shot 2022-08-13 at 17 36 58" src="https://user-images.githubusercontent.com/83487073/184476076-acf34c30-85ca-452a-a493-c663f951446e.png">
+
+```python 
+df.info() 
+df.describe() 
+df.isnull().sum() 
+```
+<img width="194" alt="Screen Shot 2022-08-13 at 17 38 08" src="https://user-images.githubusercontent.com/83487073/184476125-eab9c296-9bfd-4d1f-8f92-8b95d80c69be.png">
+
+```python 
+mean = df['WindGustSpeed'].mean()
+df['WindGustSpeed'] = df['WindGustSpeed'].fillna(mean)
+
+mean = df['Sunshine'].mean()
+df['Sunshine'] = df['Sunshine'].fillna(mean)
+
+df['WindSpeed9am'] = df[['WindGustDir', 'WindDir9am', 'WindDir3pm', 'WindSpeed9am']].iloc[:,3].fillna(df['WindSpeed9am'].mean())
+
+df.drop('Date', axis=1, inplace=True)
+
+y = df['RainTomorrow'].values
+y_idx = np.where(y=='Yes')
+n_idx = np.where(y=='No')
+y[y_idx] = 1 ; y[n_idx] = 0
+
+df.drop('RainTomorrow', axis=1, inplace=True)
+
+# 타겟 
+y # 이 값들 타겟으로 잡으면 이진분류 문제가 된다. 
+```
+
+<img width="587" alt="Screen Shot 2022-08-13 at 17 40 10" src="https://user-images.githubusercontent.com/83487073/184476190-7d25d714-9997-4d5e-8bad-39d089f88ed3.png">
+
+```python 
+# 5, 7, 8, 19; string 값 가진 특성변수 제외 
+new_df = df.drop(['WindGustDir', 'WindDir9am', 'WindDir3pm', 'RainToday'], axis=1)
+
+new_df.isnull().sum() 
+```
+<img width="176" alt="Screen Shot 2022-08-13 at 17 40 50" src="https://user-images.githubusercontent.com/83487073/184476215-4f947ccf-df47-4718-af66-04c94e767149.png">
+
+```python 
+# 입력 특성변수들 
+X = new_df.values  ; X 
+```
+<img width="414" alt="Screen Shot 2022-08-13 at 17 41 18" src="https://user-images.githubusercontent.com/83487073/184476231-4002696c-f145-42c0-96a5-d934557ec697.png">
+
+모델 훈련시키기 
+
+```python 
+# 훈련용 셋과 테스트용 셋으로 분리 
+x_train, x_test, y_train, y_test = train_test_split(X, np.array(list(y)), test_size=0.25, random_state=0)
+
+from sklearn.linear_model import LogisticRegression 
+model = LogisticRegression()
+
+# 모델 훈련시키기
+model.fit(x_train, y_train)
+```
+모델 성능 확인 
+```python 
+# 테스트 데이터에 대해 모델 예측 
+y_pred = model.predict(x_test)
+
+# 정확도 계산 (모델 성능지표 계산)
+from sklearn.metrics import accuracy_score
+acc_score = accuracy_score(y_test, y_pred) 
+print(f'로지스틱회귀 이진분류 모델 정확도:{round(acc_score*100, 2)}%')
+```
+로지스틱회귀 이진분류 모델 정확도: 97.83%
+
+
 ---
 
 # 서포트벡터 머신 (Support Vector Machine) 알고리즘 
@@ -577,6 +658,8 @@ plt.show()
 <img width="729" alt="Screen Shot 2022-08-13 at 16 38 51" src="https://user-images.githubusercontent.com/83487073/184474197-c8fa6335-5796-481c-95d6-76ab370bc72e.png">
 
 이 경우엔 대체로 서포트벡터 머신 모형이 가장 높은 성능 기록했다.
+
+
 
 
 
