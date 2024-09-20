@@ -1,5 +1,5 @@
 ---
-title : "[Logical Writing Study 01] Subject : Should Generative A.I. be regulated by law?"
+title : "[Logical Writing Study 01] Subject : Should Generative A.I. Be Regulated by Law?"
 excerpt : "Logical Writing Study & Training"
 
 categories : 
