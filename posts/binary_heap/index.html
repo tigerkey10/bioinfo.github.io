@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="ko-KR" data-mode="light" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="[2021 인공지능전문가 교육과정 복습] 이진 힙 개념, Downheap과 Upheap, 이진 힙 구현" /><meta property="og:locale" content="ko_KR" /><meta name="description" content="부산대학교 인공지능전문가 교육과정 - 데이터사이언스:데이터 구조 수업 복습 후 정리" /><meta property="og:description" content="부산대학교 인공지능전문가 교육과정 - 데이터사이언스:데이터 구조 수업 복습 후 정리" /><link rel="canonical" href="https://kibeomkim.me/posts/binary_heap/" /><meta property="og:url" content="https://kibeomkim.me/posts/binary_heap/" /><meta property="og:site_name" content="der Wille zur Macht" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2022-01-22T00:00:00+09:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="[2021 인공지능전문가 교육과정 복습] 이진 힙 개념, Downheap과 Upheap, 이진 힙 구현" /><meta name="google-site-verification" content="1CLBUlwAX10LXrW4RzkPuaeWtey34c3dyngs14cKrCw" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-01-22T00:00:00+09:00","datePublished":"2022-01-22T00:00:00+09:00","description":"부산대학교 인공지능전문가 교육과정 - 데이터사이언스:데이터 구조 수업 복습 후 정리","headline":"[2021 인공지능전문가 교육과정 복습] 이진 힙 개념, Downheap과 Upheap, 이진 힙 구현","mainEntityOfPage":{"@type":"WebPage","@id":"https://kibeomkim.me/posts/binary_heap/"},"url":"https://kibeomkim.me/posts/binary_heap/"}</script><title>[2021 인공지능전문가 교육과정 복습] 이진 힙 개념, Downheap과 Upheap, 이진 힙 구현 | der Wille zur Macht</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="der Wille zur Macht"><meta name="application-name" content="der Wille zur Macht"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script type="text/x-mathjax-config"> MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "AMS" } }, tex2jax: { inlineMath: [ ['$', '$'] ], displayMath: [ ['$$', '$$'] ], processEscapes: true, } }); MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) { alert("Math Processing Error: "+message[1]); }); MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) { alert("Math Processing Error: "+message[1]); }); </script> <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="/assets/img/emoge.png" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">der Wille zur Macht</a></div><div class="site-subtitle font-italic">10,000 Hours</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>카테고리</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>태그</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>타임라인</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="" aria-label="" target="_blank" rel="noopener"> <i class=""></i> </a> <a href="https://github.com/tigerkey10" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['kkb1004tom','gmail.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="" aria-label="" target="_blank" rel="noopener"> <i class=""></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>[2021 인공지능전문가 교육과정 복습] 이진 힙 개념, Downheap과 Upheap, 이진 힙 구현</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> 포스트</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="검색..."> </span> <span id="search-cancel" >취소</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>[2021 인공지능전문가 교육과정 복습] 이진 힙 개념, Downheap과 Upheap, 이진 힙 구현</h1><div class="post-meta text-muted"> <span> 게시 <em class="" data-ts="1642777200" data-df="YYYY-MM-DD" data-toggle="tooltip" data-placement="bottom"> 2022-01-22 </em> </span> <span> 업데이트 <em class="" data-ts="1642809600" data-df="YYYY-MM-DD" data-toggle="tooltip" data-placement="bottom"> 2022-01-22 </em> </span><div class="d-flex justify-content-between"> <span> By <em> <a href="https://github.com/tigerkey10/bioinfo.github.io">Ki Beom Kim</a> </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="2086 단어"> <em>11 분</em>읽는 시간</span></div></div></div><div class="post-content"><h1 id="이진-힙binary-heap">이진 힙(Binary Heap)</h1><h2 id="정의"><span class="mr-2">정의</span><a href="#정의" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>데이터 간 우선순위 있는 완전이진트리</p><ul><li>우선순위: 부모노드 &gt; 자식노드</ul><h2 id="종류"><span class="mr-2">종류</span><a href="#종류" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ul><li>최대힙: 부모노드 키 값이 자식노드 보다 같거나 큰 값 갖는 이진 힙<li>최소힙: 부모노드 키 값이 자식노드 보다 같거나 작은 값 갖는 이진 힙</ul><h2 id="특징"><span class="mr-2">특징</span><a href="#특징" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ul><li>반 정렬 상태다.<li>중복 값 허용한다.</ul><h2 id="응용"><span class="mr-2">응용</span><a href="#응용" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ul><li>우선순위 큐 구현</ul><hr /><h1 id="이진-힙-연산-최소힙-기준">이진 힙 연산 (최소힙 기준)</h1><h2 id="삭제연산downheap"><span class="mr-2">삭제연산(Downheap)</span><a href="#삭제연산downheap" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>루트로부터 아래로 ‘내려가면서’ 정렬(엄밀히 말해 정렬은 아니지만)이 진행된다. 그래서 Downheap 이라 부른다.</p><h2 id="결과"><span class="mr-2">결과</span><a href="#결과" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>루트의 키가 삭제된다. 그리고 힙 속성 유지 위해 정렬한다.</p><h2 id="과정"><span class="mr-2">과정</span><a href="#과정" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ol><li>힙의 가장 마지막 노드를 루트 자리에 갖다 놓는다. 그 과정에서 루트는 삭제된다.<li>힙 크기를 1 감소시킨다.<li>새 루트의 왼쪽 / 오른쪽 자식 중 크기 더 작은 것 찾는다.<li>더 작은 자식과 새 루트 키 크기 비교해서, 루트가 더 작으면 가만히 있는다. 자식이 더 작으면 루트와 그 자식 자리를 바꾼다.<li>최소힙 속성 만족할 때 까지 3~4 과정 반복하며 이파리 방향으로 진행한다.</ol><h2 id="시간복잡도"><span class="mr-2">시간복잡도</span><a href="#시간복잡도" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>$O(log{n})$</p><hr /><h2 id="삽입연산upheap"><span class="mr-2">삽입연산(Upheap)</span><a href="#삽입연산upheap" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>이파리부터 위로 올라가면서 정렬이 진행된다. 그래서 Upheap 이라 부른다.</p><h2 id="결과-1"><span class="mr-2">결과</span><a href="#결과-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>이진 힙 마지막 노드로 데이터를 삽입한다. 그리고 힙 속성 유지 위해 정렬한다.</p><h2 id="과정-1"><span class="mr-2">과정</span><a href="#과정-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ol><li>힙 마지막 노드로 데이터 삽입한다.<li>데이터 삽입한 노드와 그 부모의 키를 비교해서, 부모가 더 크면 자식과 부모 노드를 맞교환한다.<li>2번 과정 반복하며 루트 향해 올라간다.</ol><h2 id="시간복잡도-1"><span class="mr-2">시간복잡도</span><a href="#시간복잡도-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>$O(log{n})$</p><hr /><h1 id="이진-힙-구현---배열-리스트-이용-1">이진 힙 구현 - 배열 리스트 이용 1</h1><p>완전 이진트리에서, [ 왼쪽 $\Rightarrow$ 오른쪽 방향 ] 으로 노드 별 번호를 붙인다.</p><p>노드 별 번호를 배열 리스트의 인덱스로 삼는다.</p><ul><li>번호는 1번부터 시작한다. 따라서 리스트 0번 인덱스 자리도 비운다.</ul><h2 id="최대힙"><span class="mr-2">최대힙</span><a href="#최대힙" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+</pre><td class="rouge-code"><pre><span class="c1"># 배열 리스트 이용해 최대힙 구현 
+</span>
+<span class="k">class</span> <span class="nc">Maxheap</span> <span class="p">:</span> 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="bp">self</span><span class="p">.</span><span class="n">heap</span> <span class="o">=</span> <span class="p">[]</span> 
+        <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># 힙 크기 정의
+</span>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span> 
+
+    <span class="c1"># 힙이 비었다'의 정의
+</span>    <span class="k">def</span> <span class="nf">isEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> 
+
+    <span class="c1"># i번째 노드의 부모 노드 
+</span>    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="c1"># i번째 노드의 왼쪽 자식 노드 
+</span>    <span class="k">def</span> <span class="nf">left</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="c1"># i번째 노드의 오른쪽 자식 노드 
+</span>    <span class="k">def</span> <span class="nf">right</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># 힙 출력 정의 
+</span>    <span class="k">def</span> <span class="nf">print_heap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="c1"># 최대힙 삽입연산 정의
+</span>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c1"># 삽입한 데이터 현재위치 
+</span>        <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="c1"># 정렬
+</span>        <span class="k">while</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">parent</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># 정렬 일어나는 조건 정의: 루트가 아니면서, 자식이 부모보다 클 때 
+</span>            <span class="c1"># 정렬은 어떻게 발생하는가?의 정의
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">parent</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c1"># 자식의 위치로 부모가 이동 
+</span>            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">2</span> <span class="c1"># 자식이 부모 위치로 이동  
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span> 
+
+    <span class="c1"># 최대힙 삭제연산 정의
+</span>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="n">parent</span> <span class="o">=</span> <span class="mi">1</span> 
+        <span class="n">child</span> <span class="o">=</span> <span class="mi">2</span> 
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">()</span> <span class="p">:</span> <span class="c1"># 힙이 비어있지 않을 때 
+</span>            <span class="n">heaproot</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">size</span><span class="p">()]</span>
+            <span class="c1"># 정렬 
+</span>            <span class="k">while</span> <span class="n">child</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">:</span> <span class="c1"># self.size() 이하 인덱스. 모든 노드에 대해 반복. 특정조건 나오면 서라. 
+</span>                <span class="k">if</span> <span class="p">(</span><span class="n">child</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">left</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">right</span><span class="p">(</span><span class="n">parent</span><span class="p">))</span> <span class="p">:</span> <span class="c1"># 1. 왼쪽.오른쪽 자식 비교해서 더 큰 놈 가려낸다. 
+</span>                    <span class="n">child</span> <span class="o">+=</span> <span class="mi">1</span> 
+                <span class="k">if</span> <span class="n">last</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">child</span><span class="p">]</span> <span class="p">:</span> <span class="k">break</span> <span class="c1"># 2. 자식과 부모 비교 -&gt; 속성 만족하면 선다. 
+</span>                <span class="c1"># 속성 만족 안 하면 정렬한다. 
+</span>                <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">parent</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">child</span><span class="p">]</span> <span class="c1"># 원래 부모가 있던 자리에 자식이 간다. 
+</span>                <span class="n">parent</span> <span class="o">=</span> <span class="n">child</span> <span class="c1"># 원래 자식이 있던 자리는 또 다른 부모의 자리다. 
+</span>                <span class="n">child</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">parent</span> <span class="c1"># 새 부모자리의 왼쪽 자식(인덱스)
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">parent</span><span class="p">]</span> <span class="o">=</span> <span class="n">last</span> 
+            <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">heaproot</span> 
+</pre></table></code></div></div><h2 id="최대힙이-잘-작동하는-지-테스트"><span class="mr-2">최대힙이 잘 작동하는 지 테스트</span><a href="#최대힙이-잘-작동하는-지-테스트" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span> <span class="p">:</span> 
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Maxheap</span><span class="p">()</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">90</span><span class="p">,</span> <span class="s">'watermelon'</span><span class="p">]);</span><span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">80</span><span class="p">,</span> <span class="s">'pear'</span><span class="p">])</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">70</span><span class="p">,</span> <span class="s">'melon'</span><span class="p">]);</span><span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="s">'lime'</span><span class="p">])</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">60</span><span class="p">,</span> <span class="s">'mango'</span><span class="p">]);</span><span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="s">'cherry'</span><span class="p">])</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="s">'grape'</span><span class="p">]);</span><span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">35</span><span class="p">,</span> <span class="s">'orange'</span><span class="p">])</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="s">'app'</span><span class="p">]);</span><span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="s">'banana'</span><span class="p">])</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">45</span><span class="p">,</span> <span class="s">'lemon'</span><span class="p">]);</span><span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">40</span><span class="p">,</span> <span class="s">'kiwi'</span><span class="p">])</span>
+</pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">'__main__'</span> <span class="p">:</span> 
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'최대 힙:'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">print_heap</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'최댓값 삭제 후:'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">print_heap</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="s">'apple'</span><span class="p">])</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'5 삽입 후:'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">print_heap</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">()</span>
+</pre></table></code></div></div><p>최대 힙:[[90, ‘watermelon’], [80, ‘pear’], [70, ‘melon’], [50, ‘lime’], [60, ‘mango’], [40, ‘kiwi’], [30, ‘grape’], [35, ‘orange’], [10, ‘app’], [15, ‘banana’], [45, ‘lemon’], [20, ‘cherry’]]</p><p>최댓값 삭제 후:[[80, ‘pear’], [60, ‘mango’], [70, ‘melon’], [50, ‘lime’], [45, ‘lemon’], [40, ‘kiwi’], [30, ‘grape’], [35, ‘orange’], [10, ‘app’], [15, ‘banana’], [20, ‘cherry’]]</p><p>5 삽입 후:[[80, ‘pear’], [60, ‘mango’], [70, ‘melon’], [50, ‘lime’], [45, ‘lemon’], [40, ‘kiwi’], [30, ‘grape’], [35, ‘orange’], [10, ‘app’], [15, ‘banana’], [20, ‘cherry’], [5, ‘apple’]]</p><hr /><h1 id="이진-힙-구현---배열-리스트-이용-2">이진 힙 구현 - 배열 리스트 이용 2</h1><p>좀 더 직관적인 방식이다.</p><p>downheap, upheap 의 정의를 삽입. 삭제 정의 내부에 두지 않고, 따로 빼서 정의했다.</p><p>결과로, 삽입. 삭제 연산 정의할 때는 정의된 downheap, upheap을 갖다 쓰기만 하면 된다.</p><h2 id="최소힙"><span class="mr-2">최소힙</span><a href="#최소힙" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+</pre><td class="rouge-code"><pre><span class="c1"># 이진힙 구현 - 2
+# 좀 더 직관적 방식
+</span>
+<span class="k">class</span> <span class="nc">BinaryHeap</span> <span class="p">:</span> 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="bp">self</span><span class="p">.</span><span class="n">heap</span> <span class="o">=</span> <span class="n">base</span> <span class="c1"># 리스트
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">base</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="c1"># 최초 힙 생성(초기정렬)
+</span>    <span class="k">def</span> <span class="nf">create_heap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span> 
+            <span class="bp">self</span><span class="p">.</span><span class="n">downheap</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># 삽입연산 정의
+</span>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="c1"># 삽입
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># 힙 크기 + 1
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">upheap</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n</span><span class="p">)</span><span class="c1"># 정렬
+</span>
+    <span class="c1"># 삭제연산 정의
+</span>    <span class="k">def</span> <span class="nf">delete_minimum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">:</span> <span class="c1"># 이진힙 비어있지 않을 때 
+</span>            <span class="n">minimum</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 루트노드
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 루트와 맨 마지막 노드 서로 바꾼다
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> 
+            <span class="bp">self</span><span class="p">.</span><span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">downheap</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 루트노드1 부터 정렬 
+</span>            <span class="k">return</span> <span class="n">minimum</span>
+    
+    <span class="c1"># downheap 정렬 
+</span>    <span class="k">def</span> <span class="nf">downheap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># i는 현재노드
+</span>        <span class="k">while</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="p">.</span><span class="n">n</span><span class="p">)</span> <span class="p">:</span> 
+            <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">n</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span> <span class="c1"># i의 왼쪽 자식 vs 오른쪽 자식 중 더 작은 것. 
+</span>                <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="k">break</span> <span class="c1"># 최소힙 속성 만족하는 지 검사 
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="c1"># 정렬 
+</span>            <span class="n">i</span> <span class="o">=</span> <span class="n">k</span> 
+    
+    <span class="c1"># upheap 정렬 
+</span>    <span class="k">def</span> <span class="nf">upheap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># j는 현재노드 
+</span>        <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">j</span><span class="o">//</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span> <span class="c1"># 현재노드가 루트가 아닐 때 &amp; 부모가 자식보다 클 때 
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">j</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">j</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># 부모-자식 교환
+</span>            <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="o">//</span><span class="mi">2</span>
+
+    <span class="c1"># 힙 출력  
+</span>    <span class="k">def</span> <span class="nf">print_heap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span> 
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'[</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">heap</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s">]'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'힙 크기: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">n</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+</pre></table></code></div></div><p>참고)</p><p>create_heap() 은 ‘최소힙 상태로 초기정렬 하는’ 메소드다.</p><ul><li>완전이진트리에서 각 단위 서브트리 돌면서 downheap<li>downheap(맨 마지막 노드의 부모~ 루트)</ul><hr /><h2 id="구현된-최소힙이-잘-작동하는-지-테스트"><span class="mr-2">구현된 최소힙이 잘 작동하는 지 테스트</span><a href="#구현된-최소힙이-잘-작동하는-지-테스트" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="c1"># 위 스크립트를 모듈로 만들고, 저장했다. 
+# 따라서 먼저 모듈을 호출한다. 
+</span>
+<span class="kn">import</span> <span class="nn">sys</span> 
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">'/Users/kibeomkim/Desktop/datascience/DIY_modules'</span><span class="p">)</span>
+<span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="s">'/Users/kibeomkim/Desktop/datascience/DIY_modules'</span><span class="p">)</span>
+</pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="c1"># 이진힙 클래스 호출 
+</span>
+<span class="kn">from</span> <span class="nn">binary_heap</span> <span class="kn">import</span> <span class="n">BinaryHeap</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span> <span class="p">:</span> 
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">90</span><span class="p">,</span> <span class="s">'watermellon'</span><span class="p">]);</span> <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">80</span><span class="p">,</span> <span class="s">'pear'</span><span class="p">])</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">70</span><span class="p">,</span> <span class="s">'melon'</span><span class="p">]);</span> <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="s">'lime'</span><span class="p">])</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">60</span><span class="p">,</span> <span class="s">'mango'</span><span class="p">]);</span><span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="s">'cherry'</span><span class="p">])</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="s">'grape'</span><span class="p">]);</span><span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">35</span><span class="p">,</span> <span class="s">'orange'</span><span class="p">])</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="s">'apricot'</span><span class="p">]);</span><span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="s">'banana'</span><span class="p">])</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">45</span><span class="p">,</span> <span class="s">'lemon'</span><span class="p">]);</span><span class="n">a</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="mi">40</span><span class="p">,</span><span class="s">'kiwi'</span><span class="p">])</span>
+    <span class="n">bh</span> <span class="o">=</span> <span class="n">BinaryHeap</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span> <span class="p">:</span> 
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'힙 만들기 전:'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+    <span class="n">bh</span><span class="p">.</span><span class="n">print_heap</span><span class="p">()</span> 
+    <span class="n">bh</span><span class="p">.</span><span class="n">create_heap</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'최소힙:'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+    <span class="n">bh</span><span class="p">.</span><span class="n">print_heap</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'최솟값 삭제 후:'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">bh</span><span class="p">.</span><span class="n">delete_minimum</span><span class="p">())</span>
+    <span class="n">bh</span><span class="p">.</span><span class="n">print_heap</span><span class="p">()</span> 
+    <span class="n">bh</span><span class="p">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="s">'apple'</span><span class="p">])</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'5 삽입 후:'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+    <span class="n">bh</span><span class="p">.</span><span class="n">print_heap</span><span class="p">()</span>
+</pre></table></code></div></div><p>힙 만들기 전:[90, watermellon][80, pear][70, melon][50, lime][60, mango][20, cherry][30, grape][35, orange][10, apricot][15, banana][45, lemon][40, kiwi]</p><p>힙 크기: 12</p><p>최소힙:[10, apricot][15, banana][20, cherry][35, orange][45, lemon][40, kiwi][30, grape][80, pear][50, lime][60, mango][90, watermellon][70, melon]</p><p>힙 크기: 12</p><p>최솟값 삭제 후:[10, ‘apricot’] [15, banana][35, orange][20, cherry][50, lime][45, lemon][40, kiwi][30, grape][80, pear][70, melon][60, mango][90, watermellon]</p><p>힙 크기: 11</p><p>5 삽입 후:[5, apple][35, orange][15, banana][50, lime][45, lemon][20, cherry][30, grape][80, pear][70, melon][60, mango][90, watermellon][40, kiwi]</p><p>힙 크기: 12</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/data-science/'>Data Science</a>, <a href='/categories/python/'>python</a>, <a href='/categories/data-structure/'>data structure</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/data-structure/" class="post-tag no-text-decoration" >data structure</a> <a href="/tags/computer-science/" class="post-tag no-text-decoration" >computer science</a> <a href="/tags/study/" class="post-tag no-text-decoration" >study</a> <a href="/tags/data-science/" class="post-tag no-text-decoration" >data science</a> <a href="/tags/python/" class="post-tag no-text-decoration" >python</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">공유하기</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=%5B2021+%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EC%A0%84%EB%AC%B8%EA%B0%80+%EA%B5%90%EC%9C%A1%EA%B3%BC%EC%A0%95+%EB%B3%B5%EC%8A%B5%5D+%EC%9D%B4%EC%A7%84+%ED%9E%99+%EA%B0%9C%EB%85%90%2C+Downheap%EA%B3%BC+Upheap%2C+%EC%9D%B4%EC%A7%84+%ED%9E%99+%EA%B5%AC%ED%98%84+-+der+Wille+zur+Macht&url=https%3A%2F%2Fkibeomkim.me%2Fposts%2Fbinary_heap%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=%5B2021+%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EC%A0%84%EB%AC%B8%EA%B0%80+%EA%B5%90%EC%9C%A1%EA%B3%BC%EC%A0%95+%EB%B3%B5%EC%8A%B5%5D+%EC%9D%B4%EC%A7%84+%ED%9E%99+%EA%B0%9C%EB%85%90%2C+Downheap%EA%B3%BC+Upheap%2C+%EC%9D%B4%EC%A7%84+%ED%9E%99+%EA%B5%AC%ED%98%84+-+der+Wille+zur+Macht&u=https%3A%2F%2Fkibeomkim.me%2Fposts%2Fbinary_heap%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fkibeomkim.me%2Fposts%2Fbinary_heap%2F&text=%5B2021+%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EC%A0%84%EB%AC%B8%EA%B0%80+%EA%B5%90%EC%9C%A1%EA%B3%BC%EC%A0%95+%EB%B3%B5%EC%8A%B5%5D+%EC%9D%B4%EC%A7%84+%ED%9E%99+%EA%B0%9C%EB%85%90%2C+Downheap%EA%B3%BC+Upheap%2C+%EC%9D%B4%EC%A7%84+%ED%9E%99+%EA%B5%AC%ED%98%84+-+der+Wille+zur+Macht" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="링크 복사하기" data-title-succeed="링크가 복사되었습니다!"> </i> </span></div></div></div><script src="https://utteranc.es/client.js" repo="tigerkey10/bioinfo.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async> </script></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">최근 업데이트</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/classifier/">[알고리즘/지도학습] 로지스틱 회귀, 서포트벡터 머신, 나이브 베이즈 알고리듬, 분류모형 별 성능 비교</a><li><a href="/posts/regressor/">[알고리즘/지도학습] 회귀문제 - 선형회귀, 의사결정회귀나무, 의사결정회귀나무 앙상블(그래디언트 부스트)</a><li><a href="/posts/boosting/">[알고리즘/지도학습] 앙상블 알고리즘-부스팅(에이다 부스트, 그래디언트 부스트)</a><li><a href="/posts/ensemble/">[알고리즘/지도학습] 앙상블 알고리즘-취합(다수결 투표, 배깅, 랜덤포레스트)</a><li><a href="/posts/decision_tree/">[알고리즘/지도학습] 의사결정나무(Decision Tree) 알고리듬</a></ul></div><div id="access-tags"><div class="panel-heading">인기 태그</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/study/">study</a> <a class="post-tag" href="/tags/python/">python</a> <a class="post-tag" href="/tags/mathematics/">mathematics</a> <a class="post-tag" href="/tags/data-science/">data science</a> <a class="post-tag" href="/tags/computer-science/">computer science</a> <a class="post-tag" href="/tags/datascience/">datascience</a> <a class="post-tag" href="/tags/data-structure/">data structure</a> <a class="post-tag" href="/tags/algorithm/">algorithm</a> <a class="post-tag" href="/tags/deep-learning/">Deep learning</a> <a class="post-tag" href="/tags/ml/">ML</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">바로가기</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>관련된 글</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/tree_series/"><div class="card-body"> <em class="small" data-ts="1642604400" data-df="YYYY-MM-DD" > 2022-01-20 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[2021 인공지능전문가 교육과정 복습] 트리, 이진트리, 이진트리 순회</h3><div class="text-muted small"><p> 트리(Tree) 비선형자료구조. 정의 계층. 또는 부모/자식/형제. 특징 계층구조 표현에 적합하다. (조직계층구조, OS 파일시스템 등) 일반트리와 이진트리로 구분된다. Empty 이거나 루트노드R 과 서브트리 집합으로 구성된다. 단, 서브트리 집합은 공집합일 수 있다. 각 서브트리 루트노드는 루트노드R 의 자식노드다. ...</p></div></div></a></div><div class="card"> <a href="/posts/binary_search_tree/"><div class="card-body"> <em class="small" data-ts="1643209200" data-df="YYYY-MM-DD" > 2022-01-27 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[2021 인공지능전문가 교육과정 복습] 이진탐색트리 개념, 연산, 구현</h3><div class="text-muted small"><p> 이진탐색트리 정의 탐색을 위한 이진트리. 이진탐색트리 연산 시간복잡도 $O(\log{n})$ 트리 높이 이진트리가 이진탐색트리가 되기 위한 조건 원소들이 서로 다른. 유일한 키를 갖고 있다. 왼쪽 서브트리 원소들의 키는 루트보다 작다. 오른쪽 서브트리 원소들의 키는 루트보다 크다. 왼쪽 서브트리와 오른쪽 서브트리도 ...</p></div></div></a></div><div class="card"> <a href="/posts/AVL_tree/"><div class="card-body"> <em class="small" data-ts="1643382000" data-df="YYYY-MM-DD" > 2022-01-29 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[2021 인공지능전문가 교육과정 복습] AVL 트리 개념, 연산, 구현</h3><div class="text-muted small"><p> AVL 트리 균형 이진탐색트리. 정의 루트노드 R의 왼쪽. 오른쪽 서브트리 높이 차가 1 이내인 ‘이진탐색트리’. 언제나 높이 균형이 유지된다. 특징 높은 시간 효율성. $\Rightarrow$ 항상 $O(\log_{2}{n})$ 시간복잡도 보장. 따라서 $O(n)$ 시간복잡도(최악경우) 걸릴 일 없다. 예시 회...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/tree_series/" class="btn btn-outline-primary" prompt="이전 글"><p>[2021 인공지능전문가 교육과정 복습] 트리, 이진트리, 이진트리 순회</p></a> <a href="/posts/keras_problems/" class="btn btn-outline-primary" prompt="다음 글"><p>[Keras/딥러닝 공부] 신경망 기본 구성, 이진분류, 다중분류, 회귀문제</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2026 <a href="https://github.com/tigerkey10/bioinfo.github.io">Ki Beom Kim</a>.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">인기 태그</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/study/">study</a> <a class="post-tag" href="/tags/python/">python</a> <a class="post-tag" href="/tags/mathematics/">mathematics</a> <a class="post-tag" href="/tags/data-science/">data science</a> <a class="post-tag" href="/tags/computer-science/">computer science</a> <a class="post-tag" href="/tags/datascience/">datascience</a> <a class="post-tag" href="/tags/data-structure/">data structure</a> <a class="post-tag" href="/tags/algorithm/">algorithm</a> <a class="post-tag" href="/tags/deep-learning/">Deep learning</a> <a class="post-tag" href="/tags/ml/">ML</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">새 버전의 콘텐츠를 사용할 수 있습니다.</p><button type="button" class="btn btn-primary" aria-label="Update"> 업데이트 </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">검색 결과가 없습니다.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/ko.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <description>Machine learning, Deep learning, Datascience, Bioinformatics.</description>
+    <link>https://kibeomkim.me</link>
+    <atom:link href="https://kibeomkim.me/feed.xml" rel="self" type="application/rss+xml" />
+	<lastBuildDate>Sat, 13 Aug 2022 00:00:00 +0900</lastBuildDate>
+	
+	<item>
+		<title>[알고리즘/지도학습] 회귀문제 - 선형회귀, 의사결정회귀나무, 의사결정회귀나무 앙상블(그래디언트 부스트)</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Sat, 13 Aug 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/regressor/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/regressor/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘/지도학습] 로지스틱 회귀, 서포트벡터 머신, 나이브 베이즈 알고리듬, 분류모형 별 성능 비교</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Sat, 13 Aug 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/classifier/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/classifier/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘/지도학습] 앙상블 알고리즘-부스팅(에이다 부스트, 그래디언트 부스트)</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Tue, 09 Aug 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/boosting/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/boosting/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘/지도학습] 앙상블 알고리즘-취합(다수결 투표, 배깅, 랜덤포레스트)</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Mon, 08 Aug 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/ensemble/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/ensemble/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘/지도학습] 의사결정나무(Decision Tree) 알고리듬</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Wed, 03 Aug 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/decision_tree/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/decision_tree/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘] 너비우선탐색, 깊이우선탐색, K-평균 클러스터링, 계층적 클러스터링, FP-Growth 알고리즘(연관규칙 마이닝)</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Fri, 29 Jul 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/bfs_dfs_clustering_fpgrowth_algorithms/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/bfs_dfs_clustering_fpgrowth_algorithms/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘] 페이지랭크(PageRank) 알고리듬, 선형계획법(LP 문제)</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Mon, 25 Jul 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/page_rank_algorithm/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/page_rank_algorithm/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘] 그래프 기본 개념, 그래프 분석 이론 기초</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Mon, 25 Jul 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/graph/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/graph/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘/문제해결전략] 분할 정복 전략, 동적 계획법, 탐욕 알고리듬</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Fri, 22 Jul 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/designing_algorithms/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/designing_algorithms/</guid>
+      </item>
+    
+	<item>
+		<title>[알고리즘] 알고리듬 정의 부터 알고리듬 검증까지 기초 이론</title>
+        
+        
+            <description>공부한 내용을 정리한 글</description>
+        
+        <pubDate>Fri, 22 Jul 2022 00:00:00 +0900</pubDate>
+        <link>https://kibeomkim.me/posts/algorithm_theory/</link>
+        <guid isPermaLink="true">https://kibeomkim.me/posts/algorithm_theory/</guid>
+      </item>
+    
+  </channel>
+</rss>

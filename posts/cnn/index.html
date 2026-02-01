@@ -1,0 +1,737 @@
+<!DOCTYPE html><html lang="ko-KR" data-mode="light" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="[Keras/딥러닝 공부] 합성곱 신경망(CNN) 이론" /><meta property="og:locale" content="ko_KR" /><meta name="description" content="공부한 내용을 기록한 글" /><meta property="og:description" content="공부한 내용을 기록한 글" /><link rel="canonical" href="https://kibeomkim.me/posts/cnn/" /><meta property="og:url" content="https://kibeomkim.me/posts/cnn/" /><meta property="og:site_name" content="der Wille zur Macht" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2022-02-28T00:00:00+09:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="[Keras/딥러닝 공부] 합성곱 신경망(CNN) 이론" /><meta name="google-site-verification" content="1CLBUlwAX10LXrW4RzkPuaeWtey34c3dyngs14cKrCw" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-02-28T00:00:00+09:00","datePublished":"2022-02-28T00:00:00+09:00","description":"공부한 내용을 기록한 글","headline":"[Keras/딥러닝 공부] 합성곱 신경망(CNN) 이론","mainEntityOfPage":{"@type":"WebPage","@id":"https://kibeomkim.me/posts/cnn/"},"url":"https://kibeomkim.me/posts/cnn/"}</script><title>[Keras/딥러닝 공부] 합성곱 신경망(CNN) 이론 | der Wille zur Macht</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="der Wille zur Macht"><meta name="application-name" content="der Wille zur Macht"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script type="text/x-mathjax-config"> MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "AMS" } }, tex2jax: { inlineMath: [ ['$', '$'] ], displayMath: [ ['$$', '$$'] ], processEscapes: true, } }); MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) { alert("Math Processing Error: "+message[1]); }); MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) { alert("Math Processing Error: "+message[1]); }); </script> <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="/assets/img/emoge.png" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">der Wille zur Macht</a></div><div class="site-subtitle font-italic">10,000 Hours</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>카테고리</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>태그</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>타임라인</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="" aria-label="" target="_blank" rel="noopener"> <i class=""></i> </a> <a href="https://github.com/tigerkey10" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['kkb1004tom','gmail.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="" aria-label="" target="_blank" rel="noopener"> <i class=""></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>[Keras/딥러닝 공부] 합성곱 신경망(CNN) 이론</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> 포스트</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="검색..."> </span> <span id="search-cancel" >취소</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>[Keras/딥러닝 공부] 합성곱 신경망(CNN) 이론</h1><div class="post-meta text-muted"> <span> 게시 <em class="" data-ts="1645974000" data-df="YYYY-MM-DD" data-toggle="tooltip" data-placement="bottom"> 2022-02-28 </em> </span> <span> 업데이트 <em class="" data-ts="1646006400" data-df="YYYY-MM-DD" data-toggle="tooltip" data-placement="bottom"> 2022-02-28 </em> </span><div class="d-flex justify-content-between"> <span> By <em> <a href="https://github.com/tigerkey10/bioinfo.github.io">Ki Beom Kim</a> </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="4761 단어"> <em>26 분</em>읽는 시간</span></div></div></div><div class="post-content"><p>아래 내용은 ‘케라스 창시자에게 배우는 딥러닝 (프랑소와 슐레 저, 박해선 옮김, 길벗 출판사)’ 을 공부한 뒤, 배운 내용을 제 언어로 정리.기록한 것 입니다.</p><hr /><h1 id="합성곱-신경망">합성곱 신경망</h1><h2 id="기본"><span class="mr-2">기본</span><a href="#기본" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>합성곱 층과 풀링 층 교차해서 쌓는 게 합성곱 신경망 기본 구조다.</p><p><img width="779" alt="Screen Shot 2022-02-28 at 13 08 45" data-src="https://user-images.githubusercontent.com/83487073/155922507-8e1e81e1-b95a-4a24-b243-52ac56ec635a.png" data-proofer-ignore></p><p>[이미지 출처: http://taewan.kim/post/cnn/]</p><h2 id="완전-연결-층dense-과-차이"><span class="mr-2">완전 연결 층(Dense) 과 차이</span><a href="#완전-연결-층dense-과-차이" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>완전 연결 층은 입력 이미지 전역패턴 학습하지만, 합성곱 층은 입력 이미지 지역 패턴 학습한다.</p><h2 id="특징"><span class="mr-2">특징</span><a href="#특징" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ul><li>평행이동 불변성: 평행이동 된 지역 패턴은 같은 패턴으로 인식한다. 이는 합성곱 신경망이 효율적으로 지역 패턴 학습하게 한다. 또, 인간 두뇌가 객체 인식하는 방법과 같다.<li>객체를 계층적 인식: 컨브넷은 객체를 계층적으로 인식한다. 각 위치 에지, 질감에서 시작해서 귀, 코, 눈 등 더 상위 개념을 순차.계층적으로 인식해간다. 두뇌가 객체 인식하는 방법과 같다.</ul><hr /><h1 id="합성곱-연산">합성곱 연산</h1><p>합성곱 층은 입력 이미지 받아 합성곱 연산 수행하고, 결과 출력한다.</p><p>합성곱 연산은 입력 이미지 모든 위치에서 지역 패턴들 추출한다.</p><ul><li>지역패턴에는 에지(Edge), 질감(Texture) 등 포함된다.</ul><h2 id="합성곱-연산-과정"><span class="mr-2">합성곱 연산 과정</span><a href="#합성곱-연산-과정" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ol><li>입력 이미지 위를 3 $\times$ 3 또는 5 $\times$ 5 크기 윈도우가 슬라이딩(Sliding) 하며 3 $\times$ 3 또는 5 $\times$ 5 크기 패치(Patch:작은 조각) 추출한다. (윈도우 사이즈 크기 패치 추출한다)<li>각 패치와. 에지, 질감 등 지역 특징 담고있는 필터(또는 커널)를 요소별 텐서 곱 연산 한다.<li>텐서 곱 연산 결과 모두 합한다. 곧, 2 과정은 패치 각 요소를 가중합 한 것과 같다.<li>3 결과를 특성 맵(Feature Map) 또는 응답 맵(Responsse Map) 이라고 한다. 입력 이미지 각 위치에 그 필터 패턴이 나타나 있었는지 확인.응답한 결과다.</ol><ul><li>입력 이미지 각 채널(예: RGB 3개) 별로 각각 다른 필터 적용된다.<li>1개 합성곱 층에서 입력 이미지에 대해 여러 개 필터 적용한다(예: 32개, 64개, 128개…).<li>보통 1개 합성곱 층 필터 개수는 하위 층에서 상위 층 갈 수록 2 제곱 수로 점차 증가시켜 간다.<li>일반 경우, 합성곱 하위 층에서 상위 층(더 깊은 층) 갈 수록, 각 층의 출력 특성 맵 크기는 줄어든다.</ul><h3 id="위-과정-그림으로-그리면-아래와-같다"><span class="mr-2">위 과정 그림으로 그리면 아래와 같다.</span><a href="#위-과정-그림으로-그리면-아래와-같다" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><h2 id="입력-이미지와-필터"><span class="mr-2">입력 이미지와 필터</span><a href="#입력-이미지와-필터" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p><img width="494" alt="Screen Shot 2022-02-28 at 11 14 01" data-src="https://user-images.githubusercontent.com/83487073/155913072-0e8cbfcd-6627-4ce4-8e9b-157620bdfe26.png" data-proofer-ignore></p><h2 id="입력-이미지-위를-윈도우가-슬라이딩-하면서-패치-추출-패치와-필터-합성곱"><span class="mr-2">입력 이미지 위를 윈도우가 슬라이딩 하면서 패치 추출, 패치와 필터 합성곱</span><a href="#입력-이미지-위를-윈도우가-슬라이딩-하면서-패치-추출-패치와-필터-합성곱" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p><img width="645" alt="Screen Shot 2022-02-28 at 11 15 43" data-src="https://user-images.githubusercontent.com/83487073/155913181-76c9bc3c-b53a-4143-8320-1ede1e2063c8.png" data-proofer-ignore></p><p><img width="669" alt="Screen Shot 2022-02-28 at 11 16 26" data-src="https://user-images.githubusercontent.com/83487073/155913246-8a1953b3-6294-49f4-b97e-d17eedd139e1.png" data-proofer-ignore></p><p><img width="642" alt="Screen Shot 2022-02-28 at 11 16 47" data-src="https://user-images.githubusercontent.com/83487073/155913282-76dc0405-9a0c-4354-8367-3b31704782d2.png" data-proofer-ignore></p><p><img width="653" alt="Screen Shot 2022-02-28 at 11 17 43" data-src="https://user-images.githubusercontent.com/83487073/155913362-0a4ed507-24f6-4025-bc02-3ea0dc8ee7ac.png" data-proofer-ignore></p><p><img width="655" alt="Screen Shot 2022-02-28 at 11 18 09" data-src="https://user-images.githubusercontent.com/83487073/155913393-ff68e647-e263-4304-9499-816cdb6aea72.png" data-proofer-ignore></p><p><img width="635" alt="Screen Shot 2022-02-28 at 11 21 22" data-src="https://user-images.githubusercontent.com/83487073/155913631-cbe1bdf2-9a36-4ea4-b0e2-5fc49705b9cb.png" data-proofer-ignore></p><p><img width="636" alt="Screen Shot 2022-02-28 at 11 21 44" data-src="https://user-images.githubusercontent.com/83487073/155913652-b6af1f74-6cf5-449b-afe8-3cc42b8d7ae4.png" data-proofer-ignore></p><p><img width="636" alt="Screen Shot 2022-02-28 at 11 22 03" data-src="https://user-images.githubusercontent.com/83487073/155913680-3b15c7d4-7a21-4659-8373-f6d7555eb545.png" data-proofer-ignore></p><p><img width="639" alt="Screen Shot 2022-02-28 at 11 22 33" data-src="https://user-images.githubusercontent.com/83487073/155913723-bae7f10c-d4ec-4f6c-a88c-987499e79c60.png" data-proofer-ignore></p><ul><li>3개 채널 합성곱 결과 행렬을 요소별로 합 한게 필터 1개에 대한 최종 출력 특성 맵 이다.<li>이게 필터 수 만큼의 차원을 이룬다.</ul><hr /><h1 id="패딩padding">패딩(Padding)</h1><h2 id="zero-padding"><span class="mr-2">Zero Padding</span><a href="#zero-padding" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>입력 특성 맵과 출력 특성 맵 크기를 같게 하고 싶으면 입력 특성 맵에 패딩(Padding) 추가하면 된다.</p><p>입력 특성 맵 가장자리에 적절한 개수 행과 열 추가하는 걸 패딩이라 한다.</p><p>패딩 자리에 보통 0 넣기 때문에, 제로 패딩 이라고도 한다.</p><p><img width="363" alt="Screen Shot 2022-02-28 at 11 30 45" data-src="https://user-images.githubusercontent.com/83487073/155914321-d990fb37-5103-4efb-8a0f-b86b7d416739.png" data-proofer-ignore></p><p>빈 부분이 패딩 자리다.</p><p>위 행렬에 대해 합성곱 하면 출력 특성 맵 크기가 입력 특성 맵과 같아진다 $(5*5)$</p><h2 id="케라스에서-패딩-사용하기"><span class="mr-2">케라스에서 패딩 사용하기</span><a href="#케라스에서-패딩-사용하기" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ul><li>Conv2D 층에서 padding 파라미터 설정하면 된다. ‘valid’ 는 패딩 사용 안함, ‘same’은 패딩 사용함 이다.<li>기본 파라미터는 valid (패딩 사용 안함) 이다.</ul><hr /><h1 id="스트라이드stride">스트라이드(Stride)</h1><p>보폭.</p><h2 id="정의"><span class="mr-2">정의</span><a href="#정의" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>연속한 두 윈도우 사이 거리를 스트라이드 라고 한다.</p><ul><li>스트라이드 값 기본은 $1$ 이다.</ul><h2 id="예-스트라이드--2-인-경우"><span class="mr-2">예) 스트라이드 = 2 인 경우</span><a href="#예-스트라이드--2-인-경우" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p><img width="434" alt="Screen Shot 2022-02-28 at 11 43 53" data-src="https://user-images.githubusercontent.com/83487073/155915387-085cdb09-c087-4a13-8657-073b094d691f.png" data-proofer-ignore></p><p><img width="601" alt="Screen Shot 2022-02-28 at 11 44 12" data-src="https://user-images.githubusercontent.com/83487073/155915422-094f1c9e-a64c-4088-bb05-7455608e4f6f.png" data-proofer-ignore></p><p><img width="592" alt="Screen Shot 2022-02-28 at 11 44 32" data-src="https://user-images.githubusercontent.com/83487073/155915461-4e0130ec-f182-4eea-85c9-7d9e3227cf79.png" data-proofer-ignore></p><p><img width="588" alt="Screen Shot 2022-02-28 at 11 44 51" data-src="https://user-images.githubusercontent.com/83487073/155915499-e7964ea9-252f-498a-9162-f69b560c8bde.png" data-proofer-ignore></p><p>출력 특성 맵 크기 $(4 \times 4)$ 가 입력 특성 맵 크기 $(5 \times 5)$ 보다 작아졌다(다운샘플링).</p><hr /><h1 id="최대-풀링-연산">최대 풀링 연산</h1><p>합성 곱 층 출력 특성맵 받아 다운샘플링 하는 연산이다.</p><p>$2*2$ 윈도우와 스트라이드 $2$ 사용해서, 패치 별로 최댓값만 추출한다.</p><ul><li>평균 풀링 연산 사용할 수도 있다. 패치 영역 내 평균을 추출한다.</ul><h2 id="최대-풀링-연산-목적"><span class="mr-2">최대 풀링 연산 목적</span><a href="#최대-풀링-연산-목적" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><ul><li>입력을 다운샘플링 해서, 특성 맵 가중치 개수를 줄인다.<li>모델이 공간적 계층 구조 학습하는 걸 돕는다.</ul><h2 id="최대-풀링-연산-예시"><span class="mr-2">최대 풀링 연산 예시</span><a href="#최대-풀링-연산-예시" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p><img width="382" alt="Screen Shot 2022-02-28 at 12 00 05" data-src="https://user-images.githubusercontent.com/83487073/155916875-581fe612-b05e-4807-a533-0387b20451ec.png" data-proofer-ignore></p><p><img width="361" alt="Screen Shot 2022-02-28 at 12 01 49" data-src="https://user-images.githubusercontent.com/83487073/155917093-9931f7f7-9582-4867-8498-58ac40a5cdf4.png" data-proofer-ignore></p><p><img width="355" alt="Screen Shot 2022-02-28 at 12 02 04" data-src="https://user-images.githubusercontent.com/83487073/155917110-d0045263-9309-4466-bcb6-95dd571c8daa.png" data-proofer-ignore></p><p><img width="355" alt="Screen Shot 2022-02-28 at 12 02 20" data-src="https://user-images.githubusercontent.com/83487073/155917130-987d9d55-ab02-4329-a3b7-984a4f38c826.png" data-proofer-ignore></p><hr /><h1 id="간단한-컨브넷-만들기">간단한 컨브넷 만들기</h1><p>MNIST 이미지 분류하는 간단한 컨브넷 만들기</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">layers</span> 
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">models</span> 
+
+<span class="c1"># 간단한 컨브넷 작성 
+# 이미지 특징 추출 층(합성곱 기반 층)
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">Sequential</span><span class="p">()</span> 
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="c1"># 필터 수, 패치 사이즈(3X3), 요소별 적용할 활성화 함수, 입력 특성 맵 사이즈 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span> 
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span> <span class="c1"># activation='relu': 음수, 0은 모두 0으로 만들고. 양수 값만 남긴다. 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Flatten</span><span class="p">())</span> <span class="c1"># 특성공학 결과물 1차원 텐서(벡터)로 변환하는 층 
+</span>
+<span class="c1"># 완전 연결 분류기 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">))</span> <span class="c1"># 출력층: 최상위층, 분류 결과물 확률 꼴로 변환.
+</span>
+<span class="c1"># 모델 설계 결과 요약 
+</span><span class="n">model</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></table></code></div></div><p><img width="494" alt="Screen Shot 2022-02-28 at 12 09 55" data-src="https://user-images.githubusercontent.com/83487073/155917757-b6189319-c5b6-4b83-b4f4-304e44a80840.png" data-proofer-ignore></p><ul><li>합성곱 층과 최대 풀링 층 교차해서 쌓은. 전형적인 컨브넷 구조다.<li>합성곱 층 파라미터 별 의미: 입력 특성 맵에 적용할 필터 수(32), 윈도우 크기(3 $\times$ 3), 활성화 함수(렐루함수), 입력 특성 맵 크기.<li>최대 풀링 층 파라미터 의미: 윈도우 크기(2 $\times$ 2)<li>Flatten() 층: 특성공학 결과를 1차원 텐서(벡터)로 변환하는 층. Dense 층에 넣기 위함이다.</ul><h2 id="mnist-숫자-이미지-합성곱-신경망으로-분류"><span class="mr-2">MNIST 숫자 이미지 합성곱 신경망으로 분류</span><a href="#mnist-숫자-이미지-합성곱-신경망으로-분류" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre><td class="rouge-code"><pre><span class="c1"># MNIST 숫자 이미지 합성곱 신경망으로 분류 
+</span><span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="kn">import</span> <span class="n">mnist</span> 
+<span class="kn">from</span> <span class="nn">tensorflow.keras.utils</span> <span class="kn">import</span> <span class="n">to_categorical</span> 
+
+<span class="p">(</span><span class="n">train_images</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">),</span> <span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="p">.</span><span class="n">load_data</span><span class="p">()</span> 
+
+<span class="n">train_images</span> <span class="o">=</span> <span class="n">train_images</span><span class="p">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">60000</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># 6만개 배치, 높이 28, 너비 28, 채널 1 사이즈로 크기 조정 
+</span><span class="n">train_images</span> <span class="o">=</span> <span class="n">train_images</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span>
+
+<span class="n">test_images</span> <span class="o">=</span> <span class="n">test_images</span><span class="p">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># 1만개 배치, 높이 28, 너비 28, 채널 1 사이즈로 크기 조정 
+</span><span class="n">test_images</span> <span class="o">=</span> <span class="n">test_images</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span> <span class="c1"># 전부 부동소수점 실수로 변환 + 1/255 로 스케일 조정 
+</span>
+<span class="n">train_labels</span> <span class="o">=</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">train_labels</span><span class="p">)</span> <span class="c1"># train_label 들을 모두 원핫 인코딩 벡터로 변환 # 분류 결과와 크로스엔트로피 비교하기 위함 
+</span><span class="n">test_labels</span> <span class="o">=</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">test_labels</span><span class="p">)</span> 
+
+<span class="c1"># 모델 컴파일 
+</span><span class="n">model</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="s">'rmsprop'</span><span class="p">,</span> 
+    <span class="n">loss</span> <span class="o">=</span> <span class="s">'categorical_crossentropy'</span><span class="p">,</span> 
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s">'accuracy'</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 모델 학습 
+</span><span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_images</span><span class="p">,</span> 
+    <span class="n">train_labels</span><span class="p">,</span> 
+    <span class="n">epochs</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> 
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> 
+    <span class="n">validation_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">test_loss</span><span class="p">,</span> <span class="n">test_acc</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">)</span> <span class="p">;</span> <span class="k">print</span><span class="p">(</span><span class="n">test_acc</span><span class="p">)</span>
+<span class="c1"># 98% 정도 정확도 기록함. 
+</span></pre></table></code></div></div><p><img width="607" alt="Screen Shot 2022-02-28 at 12 11 05" data-src="https://user-images.githubusercontent.com/83487073/155917863-cca137b7-5397-4c81-a866-8411d57e4b1a.png" data-proofer-ignore></p><hr /><h1 id="간단한-컨브넷-밑바닥-부터-훈련시키기">간단한 컨브넷 밑바닥 부터 훈련시키기</h1><h2 id="개-vs-고양이-분류-컨브넷-정의"><span class="mr-2">개 vs 고양이 분류 컨브넷 정의</span><a href="#개-vs-고양이-분류-컨브넷-정의" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre><td class="rouge-code"><pre><span class="c1"># 네트워크 구성 
+</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">layers</span> 
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">models</span> 
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">Sequential</span><span class="p">()</span> 
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span> <span class="c1"># 입력 특성 맵에 적용 할 필터 수: 32, 윈도우 사이즈, 활성화함수, 입력 데이터 규격: 150*150, RGB 3 채널 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span> <span class="c1"># 최대 풀링 연산 적용할 윈도우 사이즈 - 다운샘플링(크기 축소)
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span> <span class="c1"># 입력 특성 맵에 적용할 필터 수:64, 윈도우 사이즈, 활성화 함수 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span> <span class="c1"># 윈도우 사이즈 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span> <span class="c1"># 필터 수: 128개, 윈도우 사이즈 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span> <span class="c1"># 윈도우 사이즈 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span> <span class="c1"># 필터 수: 128개, 윈도우 사이즈 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># 윈도우 사이즈 
+# 여기까지 합성곱 기반 층(지역 패턴 추출 층)
+</span>
+<span class="c1"># 여기서부터 완전 연결 층(전역 패턴 추출, 분류기)
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Flatten</span><span class="p">())</span> <span class="c1"># 1차원 텐서(벡터)로 변환
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span> <span class="c1"># 512차원 벡터공간에 투영 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">))</span>
+
+<span class="n">model</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="c1"># 1. 150*150 입력 이미지에서 3*3 윈도우 슬라이딩하면서 3*3 패치 추출 -&gt; 32개 필터에 대해 합성곱 -&gt; 148*148*32 
+# 2. 2*2 윈도우 1의 출력 특성 맵에 적용해서 패치 구역 별 최댓값만 추출 -&gt; 출력 특성 맵 크기 절반으로 줄어든다 -&gt; 74*74*32 
+# 3. 2의 출력 특성 맵에서 다시 3*3 패치 추출 -&gt; 64개 필터에 대해 합성곱 -&gt; 72*72*64 
+# 4. 2 처럼 최대 풀링 연산 3 출력에 적용 -&gt; 출력 특성 맵 크기 절반으로 줄어든다 -&gt; 36*36*64 
+# 5. 3*3 패치, 128개 필터에 대해 합성곱 -&gt; 34*34*128 
+# 6. 최대 풀링 연산 적용 -&gt; 17*17*128 
+# 7. 3*3 패치, 128개 필터에 대해 합성곱 -&gt; 15*15*128 
+# 8. 최대 풀링 연산 적용 -&gt; 7*7*128 
+# 9. 완전 연결 분류기 주입 위해 1차원 텐서(벡터)로 변환하는 층 
+# 10. 512차원 벡터공간에 투영 
+# 11. 1차원 벡터공간으로 차원축소 후 시그모이드 함수 적용 
+</span></pre></table></code></div></div><p><img width="512" alt="Screen Shot 2022-02-28 at 12 13 05" data-src="https://user-images.githubusercontent.com/83487073/155917989-515f8785-f532-46f7-90e8-85fef80608da.png" data-proofer-ignore></p><h2 id="모델-컴파일"><span class="mr-2">모델 컴파일</span><a href="#모델-컴파일" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre><span class="c1"># 모델 컴파일 
+</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">optimizers</span> 
+
+<span class="n">model</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="s">'binary_crossentropy'</span><span class="p">,</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizers</span><span class="p">.</span><span class="n">adam_v2</span><span class="p">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">),</span> 
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'acc'</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></table></code></div></div><h2 id="데이터-전처리"><span class="mr-2">데이터 전처리</span><a href="#데이터-전처리" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre><td class="rouge-code"><pre><span class="c1"># 데이터 전처리 
+</span>
+<span class="kn">from</span> <span class="nn">keras.preprocessing.image</span> <span class="kn">import</span> <span class="n">ImageDataGenerator</span> 
+
+<span class="n">train_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span><span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)</span> <span class="c1"># 스케일 1/255 로 조정 , 부동소수점 형태로 변환 
+</span><span class="n">test_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span><span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)</span> <span class="c1"># 스케일 조정 
+</span>
+<span class="n">train_generator</span> <span class="o">=</span> <span class="n">train_datagen</span><span class="p">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
+    <span class="s">'/Users/kibeomkim/Desktop/cats_and_dogs_small/train'</span><span class="p">,</span> 
+    <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="c1"># 네트워크 입력 규격에 맞게 크기 변환 
+</span>    <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="c1"># 1에폭 동안 투입 할 데이터 묶음 
+</span>    <span class="n">class_mode</span> <span class="o">=</span> <span class="s">'binary'</span> <span class="c1"># 데이터가 이진 레이블임. 
+</span><span class="p">)</span>
+
+<span class="n">valid_generator</span> <span class="o">=</span> <span class="n">test_datagen</span><span class="p">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
+    <span class="s">'/Users/kibeomkim/Desktop/cats_and_dogs_small/test'</span><span class="p">,</span> 
+    <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">),</span> 
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> 
+    <span class="n">class_mode</span><span class="o">=</span><span class="s">'binary'</span>
+<span class="p">)</span>
+
+<span class="c1"># 모델 훈련 
+</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit_generator</span><span class="p">(</span>
+    <span class="n">train_generator</span><span class="p">,</span> 
+    <span class="n">steps_per_epoch</span><span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="c1"># 20*100 = 총 훈련 데이터 갯수 
+</span>    <span class="n">epochs</span> <span class="o">=</span> <span class="mi">30</span> <span class="p">,</span> 
+    <span class="n">validation_data</span> <span class="o">=</span> <span class="n">valid_generator</span><span class="p">,</span> 
+    <span class="n">validation_steps</span> <span class="o">=</span> <span class="mi">50</span> 
+<span class="p">)</span>
+</pre></table></code></div></div><h2 id="훈련-및-검증-정확도-훈련-및-검증-손실-시각화"><span class="mr-2">훈련 및 검증 정확도, 훈련 및 검증 손실 시각화</span><a href="#훈련-및-검증-정확도-훈련-및-검증-손실-시각화" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre><td class="rouge-code"><pre><span class="n">acc</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'acc'</span><span class="p">]</span>
+<span class="n">val_acc</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'val_acc'</span><span class="p">]</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'loss'</span><span class="p">]</span>
+<span class="n">val_loss</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'val_loss'</span><span class="p">]</span>
+
+<span class="n">epochs</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="s">'bo'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Training Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">val_acc</span><span class="p">,</span> <span class="s">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Validation Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Training and Validation Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span> 
+
+<span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="s">'bo'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Tranining Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">val_loss</span><span class="p">,</span> <span class="s">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Validation Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Training and Validation Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">'Accuracy &amp; Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span> 
+</pre></table></code></div></div><p><img width="666" alt="Screen Shot 2022-02-28 at 12 14 40" data-src="https://user-images.githubusercontent.com/83487073/155918102-8281b39e-a1fe-4079-b962-8b37f9f9c965.png" data-proofer-ignore></p><p>과대적합 억제하는 가장 좋은 방법 = 훈련 데이터 수 늘리는 거다.</p><p>데이터 증식 사용해 과대적합 억제해보자.</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+</pre><td class="rouge-code"><pre><span class="c1"># 데이터 증식 
+</span>
+<span class="n">datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span>
+    <span class="n">rotation_range</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="c1"># 회전을 몇 도 시킬 건가 
+</span>    <span class="n">width_shift_range</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="c1"># 수평으로 평행이동 정도 
+</span>    <span class="n">height_shift_range</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="c1"># 수직으로 평행이동 정도 
+</span>    <span class="n">shear_range</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># y축 방향으로 각도 증가 
+</span>    <span class="n">zoom_range</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># 확대/축소 범위
+</span>    <span class="n">horizontal_flip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># 좌우 대칭시킨다
+</span>    <span class="n">fill_mode</span><span class="o">=</span><span class="s">'nearest'</span> 
+<span class="p">)</span>
+
+<span class="c1"># 데이터 증식 결과 시각화해서 살펴보기 
+</span><span class="kn">from</span> <span class="nn">keras.preprocessing</span> <span class="kn">import</span> <span class="n">image</span> 
+
+<span class="n">fnames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">'/Users/kibeomkim/Desktop/cats_and_dogs_small/train/cats'</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="s">'/Users/kibeomkim/Desktop/cats_and_dogs_small/train/cats'</span><span class="p">)])</span>
+<span class="n">img_path</span> <span class="o">=</span> <span class="n">fnames</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">load_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">target_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">))</span>  <span class="c1"># 이미지 읽어오기, 크기 150*150으로 변환 
+</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">img_to_array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="c1"># (150,150,3) 크기 넘파이 배열(텐서)로 변환 
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,)</span><span class="o">+</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># (1,150,150,3) 으로 변환 (배치 차원 추가)
+</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">datagen</span><span class="p">.</span><span class="n">flow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span> 
+    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="c1"># i번째 이미지 
+</span>    <span class="n">imgplot</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">array_to_img</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">([])</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span> 
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">5</span> <span class="p">:</span> <span class="k">break</span> 
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></table></code></div></div><p><img width="654" alt="Screen Shot 2022-02-28 at 12 15 31" data-src="https://user-images.githubusercontent.com/83487073/155918159-2da575ba-86f8-4382-8100-db620716b07a.png" data-proofer-ignore></p><p>데이터 증식 적용하더라도, 애초에 훈련 데이터 수가 적기 때문에 과대적합 억제하는 데 충분치 않을 수 있다.</p><p>모델에 드롭아웃 추가해서 과대적합을 좀 더 억제해 보자.</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+</pre><td class="rouge-code"><pre><span class="c1"># 드롭아웃 포함한 새로운 컨브넷 정의 
+</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">models</span> 
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">layers</span> 
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">optimizers</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">Sequential</span><span class="p">()</span> 
+<span class="c1"># 합성곱 기반 층
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span> 
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Flatten</span><span class="p">())</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+
+<span class="c1"># 완전 연결 분류기 
+</span><span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">))</span>
+
+<span class="c1"># 모델 컴파일 
+</span><span class="n">model</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="s">'binary_crossentropy'</span><span class="p">,</span> 
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s">'acc'</span><span class="p">],</span> 
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizers</span><span class="p">.</span><span class="n">adam_v2</span><span class="p">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># 데이터 증식 &amp; 전처리 
+</span>
+<span class="n">train_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span>
+    <span class="n">rescale</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span> 
+    <span class="n">rotation_range</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> 
+    <span class="n">width_shift_range</span><span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> 
+    <span class="n">height_shift_range</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> 
+    <span class="n">shear_range</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> 
+    <span class="n">zoom_range</span><span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
+    <span class="n">horizontal_flip</span><span class="o">=</span><span class="bp">True</span> 
+<span class="p">)</span>
+
+<span class="n">test_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span>
+    <span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span>
+<span class="p">)</span>
+
+<span class="n">train_generator</span> <span class="o">=</span> <span class="n">train_datagen</span><span class="p">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
+    <span class="s">'/Users/kibeomkim/Desktop/cats_and_dogs_small/train'</span><span class="p">,</span> 
+    <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">),</span> 
+    <span class="n">batch_size</span><span class="o">=</span> <span class="mi">20</span><span class="p">,</span> 
+    <span class="n">class_mode</span><span class="o">=</span><span class="s">'binary'</span>
+<span class="p">)</span>
+
+<span class="n">valid_generator</span> <span class="o">=</span> <span class="n">test_datagen</span><span class="p">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
+    <span class="s">'/Users/kibeomkim/Desktop/cats_and_dogs_small/test'</span><span class="p">,</span> 
+    <span class="n">target_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">),</span> 
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> 
+    <span class="n">class_mode</span> <span class="o">=</span> <span class="s">'binary'</span>
+<span class="p">)</span>
+
+<span class="c1"># 모델 훈련 
+</span><span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit_generator</span><span class="p">(</span>
+    <span class="n">train_generator</span><span class="p">,</span> 
+    <span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+    <span class="n">epochs</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">validation_data</span> <span class="o">=</span> <span class="n">valid_generator</span><span class="p">,</span> 
+    <span class="n">validation_steps</span> <span class="o">=</span> <span class="mi">50</span> 
+<span class="p">)</span>
+
+<span class="n">model</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">'/Users/kibeomkim/Desktop/models_saved/dog_and_cant.h5'</span><span class="p">)</span>
+</pre></table></code></div></div><h2 id="정확도-및-손실"><span class="mr-2">정확도 및 손실</span><a href="#정확도-및-손실" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre><td class="rouge-code"><pre><span class="n">acc</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'acc'</span><span class="p">]</span>
+<span class="n">val_acc</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'val_acc'</span><span class="p">]</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'loss'</span><span class="p">]</span>
+<span class="n">val_loss</span> <span class="o">=</span> <span class="n">history</span><span class="p">.</span><span class="n">history</span><span class="p">[</span><span class="s">'val_loss'</span><span class="p">]</span>
+
+<span class="n">epochs</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="s">'bo'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Training Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">val_acc</span><span class="p">,</span> <span class="s">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Validation Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Training and Validation Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span> 
+
+<span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="s">'bo'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Tranining Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">val_loss</span><span class="p">,</span> <span class="s">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Validation Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Training and Validation Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">'Accuracy &amp; Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span> 
+</pre></table></code></div></div><p><img width="728" alt="Screen Shot 2022-02-28 at 12 17 12" data-src="https://user-images.githubusercontent.com/83487073/155918308-48dc9487-7707-4443-a06e-f87aba757909.png" data-proofer-ignore></p><hr /><h1 id="컨브넷-학습-시각화">컨브넷 학습 시각화</h1><h2 id="활성화-시각화"><span class="mr-2">활성화 시각화</span><a href="#활성화-시각화" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>합성곱 층 출력에 요소 별로 활성화 함수 적용한 결과를 ‘활성화’ 라고 한다.</p><p>이 활성화를 시각화 해서, 각 층의 의미 직접 눈으로 확인할 수 있다.</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">load_model</span> 
+
+<span class="c1"># 저장한 작은 컨브넷 로드 
+</span><span class="n">model2</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s">'/Users/kibeomkim/Desktop/models_saved/dog_and_cant.h5'</span><span class="p">)</span>
+<span class="n">model2</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></table></code></div></div><h2 id="활성화-시각화-1"><span class="mr-2">‘활성화’ 시각화</span><a href="#활성화-시각화-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="c1"># 합성곱 층, 풀링 층 출력 시각화 
+# '활성화' 시각화 
+</span><span class="n">img_path</span> <span class="o">=</span> <span class="s">'/Users/kibeomkim/Desktop/cc.png'</span>
+
+<span class="kn">from</span> <span class="nn">keras.preprocessing</span> <span class="kn">import</span> <span class="n">image</span> 
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">load_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">))</span>
+<span class="n">img_tensor</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">img_to_array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="c1"># 텐서로 변환 
+</span><span class="n">img_tensor</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">img_tensor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># 배치 축 추가 
+</span>
+<span class="n">img_tensor</span> <span class="o">/=</span> <span class="mf">255.</span>  <span class="c1"># 1/255로 스케일 조정 
+</span>
+<span class="k">print</span><span class="p">(</span><span class="n">img_tensor</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></table></code></div></div><p>(1, 150, 150, 3)</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="c1"># 원본 이미지 출력 
+</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img_tensor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></table></code></div></div><p><img width="449" alt="Screen Shot 2022-02-28 at 12 22 08" data-src="https://user-images.githubusercontent.com/83487073/155918720-7d9b9521-6fe4-45e2-944b-b4b3851da5db.png" data-proofer-ignore></p><p>[고양이 이미지 출처: https://www.rd.com/list/black-cat-breeds/]</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="c1"># 상위 8개 레이어 출력만 추출 
+</span><span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">models</span> 
+
+<span class="n">layer_outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="p">.</span><span class="n">output</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model2</span><span class="p">.</span><span class="n">layers</span><span class="p">[:</span><span class="mi">8</span><span class="p">]]</span> <span class="c1"># 상위 8개 레이어 출력 추출 
+</span>
+<span class="c1"># 특정 입력에 대한 출력 매핑하는 모형 
+</span><span class="n">activation_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">model2</span><span class="p">.</span><span class="nb">input</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">layer_outputs</span><span class="p">)</span>
+<span class="c1"># 하나 입력에 대해: 8개 출력 대응된다 (층 8개 출력 결과)
+</span>
+<span class="c1"># 예측모드로 모델 실행하기 
+</span><span class="n">activations</span> <span class="o">=</span> <span class="n">activation_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">img_tensor</span><span class="p">)</span> <span class="c1"># img_tensor 1개 입력에 대해: 8개 층 각각에 통과시켜서 그 출력 반환 
+</span></pre></table></code></div></div><h2 id="첫번째-합성곱-층-12번째-필터의-활성화-맵-시각화"><span class="mr-2">첫번째 합성곱 층 12번째 필터의 활성화 맵 시각화</span><a href="#첫번째-합성곱-층-12번째-필터의-활성화-맵-시각화" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre><td class="rouge-code"><pre><span class="c1"># 첫번째 합성곱 층 활성화 맵 시각화 
+</span><span class="n">first_layer_activation_result</span> <span class="o">=</span> <span class="n">activations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">first_layer_activation_result</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># 합성곱 결과: 높이 148, 너비 148, 배치 1, 필터 적용한 응답 맵 32개 
+</span>
+<span class="c1"># 응답 맵 32개 중 12번째 응답 맵 시각화 
+</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">first_layer_activation_result</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,:,</span><span class="mi">21</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></table></code></div></div><p><img width="672" alt="Screen Shot 2022-02-28 at 12 23 12" data-src="https://user-images.githubusercontent.com/83487073/155918785-8e01b118-95d5-4e22-8c24-337482f60113.png" data-proofer-ignore></p><p>이 필터는 전체 에지를 감지하는 것 같다.</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre><span class="n">first_layer_activation_result</span> <span class="o">=</span> <span class="n">activations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">first_layer_activation_result</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># 합성곱 결과: 높이 148, 너비 148, 배치 1, 필터 적용한 응답 맵 32개 
+</span>
+<span class="c1"># 응답 맵 32개 중 2번째 활성화 맵 
+</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">first_layer_activation_result</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,:,</span><span class="mi">2</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></table></code></div></div><p><img width="671" alt="Screen Shot 2022-02-28 at 12 25 16" data-src="https://user-images.githubusercontent.com/83487073/155918941-e7da373a-5dbd-4fad-bb0c-fdb522bd65ef.png" data-proofer-ignore></p><p>첫번째 층 두번째 필터는 도드라진 엣지 감지하는 것 같다.(고양이 귀 끝 부분)</p><h2 id="네트워크-모든-활성화-시각화"><span class="mr-2">네트워크 모든 활성화 시각화</span><a href="#네트워크-모든-활성화-시각화" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="c1"># 네트워크 모든 활성화 시각화 
+</span><span class="n">layer_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model2</span><span class="p">.</span><span class="n">layers</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span> <span class="p">:</span> <span class="c1"># 상위 8개 층 이름들 추출 (그림 이름으로 사용)
+</span>    <span class="n">layer_names</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">layer_names</span><span class="p">)</span>
+</pre></table></code></div></div><p>[‘conv2d_13’, ‘max_pooling2d_11’, ‘conv2d_14’, ‘max_pooling2d_12’, ‘conv2d_15’, ‘max_pooling2d_13’, ‘conv2d_16’, ‘max_pooling2d_14’]</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="복사되었습니다!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+</pre><td class="rouge-code"><pre><span class="n">images_per_row</span> <span class="o">=</span> <span class="mi">16</span>
+
+<span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">layer_activation</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">layer_names</span><span class="p">,</span> <span class="n">activations</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># 층 - 활성화 매핑 
+</span>    <span class="n">n_features</span> <span class="o">=</span> <span class="n">layer_activation</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 활성화 마다 채널 수 
+</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">layer_activation</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 높이와 너비 어차피 같다. 
+</span>
+    <span class="n">n_cols</span> <span class="o">=</span> <span class="n">n_features</span> <span class="o">//</span> <span class="n">images_per_row</span> 
+    <span class="n">display_grid</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size</span><span class="o">*</span><span class="n">n_cols</span><span class="p">,</span> <span class="n">images_per_row</span><span class="o">*</span><span class="n">size</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">images_per_row</span><span class="p">)</span> <span class="p">:</span> 
+            <span class="n">channel_image</span> <span class="o">=</span> <span class="n">layer_activation</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">col</span><span class="o">*</span><span class="n">images_per_row</span><span class="o">+</span><span class="n">row</span><span class="p">]</span>
+            <span class="c1"># 채널 이미지 스케일 조정 
+</span>            <span class="c1"># 정규화 
+</span>            <span class="n">channel_image</span> <span class="o">-=</span> <span class="n">channel_image</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span> 
+            <span class="n">channel_image</span> <span class="o">/=</span> <span class="n">channel_image</span><span class="p">.</span><span class="n">std</span><span class="p">()</span> 
+            
+            <span class="n">channel_image</span><span class="o">*=</span><span class="mi">64</span> 
+            <span class="n">channel_image</span> <span class="o">+=</span> <span class="mi">128</span> 
+            <span class="n">channel_image</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">clip</span><span class="p">(</span><span class="n">channel_image</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="s">'uint8'</span><span class="p">)</span>
+            <span class="n">display_grid</span><span class="p">[</span><span class="n">col</span><span class="o">*</span><span class="n">size</span> <span class="p">:</span> <span class="p">(</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">row</span><span class="o">*</span><span class="n">size</span><span class="p">:(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel_image</span>
+
+    <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">size</span> 
+    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span><span class="o">*</span><span class="n">display_grid</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">scale</span><span class="o">*</span><span class="n">display_grid</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">display_grid</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">'auto'</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">)</span>
+    <span class="c1">#plt.xticks([])
+</span>    <span class="c1">#plt.yticks([])
+</span><span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></table></code></div></div><p><img width="732" alt="Screen Shot 2022-02-28 at 12 29 41" data-src="https://user-images.githubusercontent.com/83487073/155919292-c58833f0-86e9-4124-bf54-d7fa58070aba.png" data-proofer-ignore></p><p><img width="728" alt="Screen Shot 2022-02-28 at 12 29 59" data-src="https://user-images.githubusercontent.com/83487073/155919328-8d63cf90-86c4-43b1-b779-1a6e414a6b28.png" data-proofer-ignore></p><p><img width="731" alt="Screen Shot 2022-02-28 at 12 30 25" data-src="https://user-images.githubusercontent.com/83487073/155919356-55e6406d-dd2b-47bc-aefe-7334df52db2e.png" data-proofer-ignore></p><p><img width="731" alt="Screen Shot 2022-02-28 at 12 30 46" data-src="https://user-images.githubusercontent.com/83487073/155919371-3a5dcb48-86c7-46a5-82ac-8438e3072c63.png" data-proofer-ignore></p><p><img width="730" alt="Screen Shot 2022-02-28 at 12 31 13" data-src="https://user-images.githubusercontent.com/83487073/155919413-6bb3dad3-7b05-4e63-a556-f2cee0ceb573.png" data-proofer-ignore></p><p><img width="729" alt="Screen Shot 2022-02-28 at 12 31 36" data-src="https://user-images.githubusercontent.com/83487073/155919440-c5619a4e-7735-4732-8674-6cb5bbab5b93.png" data-proofer-ignore></p><p><img width="726" alt="Screen Shot 2022-02-28 at 12 31 55" data-src="https://user-images.githubusercontent.com/83487073/155919474-34ebbae4-0824-44b5-b691-386d31439d4b.png" data-proofer-ignore></p><p><img width="729" alt="Screen Shot 2022-02-28 at 12 32 11" data-src="https://user-images.githubusercontent.com/83487073/155919519-3ffb699e-8eff-49e8-a4a9-5ec7e4e15624.png" data-proofer-ignore></p><p>상위 층으로 갈 수록 활성화 맵 의미 시각적 파악 어려워진다.</p><p>상위 층 갈 수록, 모델이 학습한 몇 가지 ‘고양이라면 갖고 있을 만한 주요 특징들’만 남게 된다.</p><p>곧, 상위 층 각 필터는 ‘고양이의 특징’들이다.</p><p>모델은 입력 이미지 위를 슬라이딩 하면서 자신이 학습한 ‘고양이 특징’들이 입력 이미지에 나타나 있는지 확인한다.</p><p>위 마지막 이미지가 듬성듬성 빈 건, 입력 이미지가 모델이 학습한 고양이 특징들 중 일부를 안 갖고 있었다는 말이다. 곧, 필터에 응답 발생하지 않았다.</p><p>결과로 나온 활성화 맵 하나하나가 추상화 된 고차원적 의미 담게 된다. 예컨대 고양이 귀, 입, 눈 등이다.</p><p>CNN이 객체를 인식하는 방법은 인간 두뇌가 현실세계의 객체 인식하는 방법과 매우 유사하다.</p><p><img width="761" alt="Screen Shot 2022-02-28 at 12 58 10" data-src="https://user-images.githubusercontent.com/83487073/155921668-552ea175-ea4e-4239-99cd-f96c62d63dc2.png" data-proofer-ignore></p><p>[오른쪽 고양이 사진 출처: https://petdoc.co.kr/ency/280]</p><ul><li>기억에 의존해 그린 고양이 얼굴 / 실제 고양이 사진</ul><p>우리 인간은 객체를 주요 특징 몇 가지를 가지고 인식한다. 기억에 의존해 고양이 얼굴을 그릴 때 나는 머릿속으로 생각했다.</p><ul><li>고양이는 뾰족한 귀가 있다.<li>고양이는 입, 코, 그리고 눈이 있다.<li>얼룩 고양이 였다.<li>고양이는 인중에 콧수염이 있다.</ul><p>고양이에 대한 추상화 된 몇 가지 특징들만 가지고 ‘이것은 고양이다’라고 인식했다.</p><p>세부 디테일은 기억하지 않는다. 온전하게 기억할 수도 없다.</p><p>세부 디테일은 가지치기 하고 주요 특징 만을 기억하고. 객체 인식한다.</p><h3 id="cnn-모델도-그러하다"><span class="mr-2">CNN 모델도 그러하다.</span><a href="#cnn-모델도-그러하다" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/data-science/'>Data Science</a>, <a href='/categories/python/'>python</a>, <a href='/categories/keras/'>Keras</a>, <a href='/categories/deep-learning/'>deep learning</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/ml/" class="post-tag no-text-decoration" >ML</a> <a href="/tags/deep-learning/" class="post-tag no-text-decoration" >Deep learning</a> <a href="/tags/python/" class="post-tag no-text-decoration" >python</a> <a href="/tags/keras/" class="post-tag no-text-decoration" >Keras</a> <a href="/tags/data-science/" class="post-tag no-text-decoration" >data science</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">공유하기</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=%5BKeras%2F%EB%94%A5%EB%9F%AC%EB%8B%9D+%EA%B3%B5%EB%B6%80%5D+%ED%95%A9%EC%84%B1%EA%B3%B1+%EC%8B%A0%EA%B2%BD%EB%A7%9D%28CNN%29+%EC%9D%B4%EB%A1%A0+-+der+Wille+zur+Macht&url=https%3A%2F%2Fkibeomkim.me%2Fposts%2Fcnn%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=%5BKeras%2F%EB%94%A5%EB%9F%AC%EB%8B%9D+%EA%B3%B5%EB%B6%80%5D+%ED%95%A9%EC%84%B1%EA%B3%B1+%EC%8B%A0%EA%B2%BD%EB%A7%9D%28CNN%29+%EC%9D%B4%EB%A1%A0+-+der+Wille+zur+Macht&u=https%3A%2F%2Fkibeomkim.me%2Fposts%2Fcnn%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fkibeomkim.me%2Fposts%2Fcnn%2F&text=%5BKeras%2F%EB%94%A5%EB%9F%AC%EB%8B%9D+%EA%B3%B5%EB%B6%80%5D+%ED%95%A9%EC%84%B1%EA%B3%B1+%EC%8B%A0%EA%B2%BD%EB%A7%9D%28CNN%29+%EC%9D%B4%EB%A1%A0+-+der+Wille+zur+Macht" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="링크 복사하기" data-title-succeed="링크가 복사되었습니다!"> </i> </span></div></div></div><script src="https://utteranc.es/client.js" repo="tigerkey10/bioinfo.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async> </script></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">최근 업데이트</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/classifier/">[알고리즘/지도학습] 로지스틱 회귀, 서포트벡터 머신, 나이브 베이즈 알고리듬, 분류모형 별 성능 비교</a><li><a href="/posts/regressor/">[알고리즘/지도학습] 회귀문제 - 선형회귀, 의사결정회귀나무, 의사결정회귀나무 앙상블(그래디언트 부스트)</a><li><a href="/posts/boosting/">[알고리즘/지도학습] 앙상블 알고리즘-부스팅(에이다 부스트, 그래디언트 부스트)</a><li><a href="/posts/ensemble/">[알고리즘/지도학습] 앙상블 알고리즘-취합(다수결 투표, 배깅, 랜덤포레스트)</a><li><a href="/posts/decision_tree/">[알고리즘/지도학습] 의사결정나무(Decision Tree) 알고리듬</a></ul></div><div id="access-tags"><div class="panel-heading">인기 태그</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/study/">study</a> <a class="post-tag" href="/tags/python/">python</a> <a class="post-tag" href="/tags/mathematics/">mathematics</a> <a class="post-tag" href="/tags/data-science/">data science</a> <a class="post-tag" href="/tags/computer-science/">computer science</a> <a class="post-tag" href="/tags/datascience/">datascience</a> <a class="post-tag" href="/tags/data-structure/">data structure</a> <a class="post-tag" href="/tags/algorithm/">algorithm</a> <a class="post-tag" href="/tags/deep-learning/">Deep learning</a> <a class="post-tag" href="/tags/ml/">ML</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">바로가기</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>관련된 글</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/keras_problems/"><div class="card-body"> <em class="small" data-ts="1642950000" data-df="YYYY-MM-DD" > 2022-01-24 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[Keras/딥러닝 공부] 신경망 기본 구성, 이진분류, 다중분류, 회귀문제</h3><div class="text-muted small"><p> 아래 내용은 ‘케라스 창시자에게 배우는 딥러닝 (프랑소와 슐레 저, 박해선 옮김, 길벗 출판사)’ 을 공부한 뒤, 배운 내용을 제 언어로 정리.기록한 것 입니다. 신경망 구조 신경망 구성.훈련에 관련된 요소들 층: 모델 기본 구성 단위. 입력값과 정답값(타겟.레이블) 최적화 대상인. 손실함수 최적화 방식. 옵티마이저 층...</p></div></div></a></div><div class="card"> <a href="/posts/keras_with_mnist/"><div class="card-body"> <em class="small" data-ts="1642431600" data-df="YYYY-MM-DD" > 2022-01-18 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[Keras/딥러닝 공부] 신경망 기본 개념, 텐서, MNIST 데이터 분류하기</h3><div class="text-muted small"><p> 아래 내용은 ‘케라스 창시자에게 배우는 딥러닝 (프랑소와 슐레 저, 박해선 옮김, 길벗 출판사)’ 을 공부한 뒤, 배운 내용을 제 언어로 정리.기록한 것 입니다. 신경망 기본 개념 신경망은 여러 겹의 ‘층(Layer)’ 으로 이루어져 있다. 각 층은 데이터 특징 추출 ‘필터’ 이다. 각 층은 함수로 생각할 수도 있다. 신경망은 여러...</p></div></div></a></div><div class="card"> <a href="/posts/machine_learning_basic/"><div class="card-body"> <em class="small" data-ts="1643900400" data-df="YYYY-MM-DD" > 2022-02-04 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[Keras/딥러닝 공부] 머신러닝 기법 분류, 데이터셋 분리 기법, 데이터 전처리 기법, 규제 기법, 머신러닝 작업 흐름</h3><div class="text-muted small"><p> 아래 내용은 ‘케라스 창시자에게 배우는 딥러닝 (프랑소와 슐레 저, 박해선 옮김, 길벗 출판사)’ 을 공부한 뒤, 배운 내용을 제 언어로 정리.기록한 것 입니다. 머신러닝 네 가지 분류 지도 학습 정의 사람이 정답 주고, 모델이 주어진 정답 잘 맞추도록 학습시키는 기법 종류 분류 회귀 시퀀스 생성 구문 트리 예측 물체 감...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/prim_algorithm/" class="btn btn-outline-primary" prompt="이전 글"><p>[2021 인공지능전문가 교육과정 복습] 최소신장트리, Prim 알고리듬, Diijkstra 알고리듬(최단 경로 찾기)</p></a> <a href="/posts/knowledge_distillation/" class="btn btn-outline-primary" prompt="다음 글"><p>[논문 읽기] Distilling the Knowledge in a Neural Network</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2026 <a href="https://github.com/tigerkey10/bioinfo.github.io">Ki Beom Kim</a>.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">인기 태그</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/study/">study</a> <a class="post-tag" href="/tags/python/">python</a> <a class="post-tag" href="/tags/mathematics/">mathematics</a> <a class="post-tag" href="/tags/data-science/">data science</a> <a class="post-tag" href="/tags/computer-science/">computer science</a> <a class="post-tag" href="/tags/datascience/">datascience</a> <a class="post-tag" href="/tags/data-structure/">data structure</a> <a class="post-tag" href="/tags/algorithm/">algorithm</a> <a class="post-tag" href="/tags/deep-learning/">Deep learning</a> <a class="post-tag" href="/tags/ml/">ML</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">새 버전의 콘텐츠를 사용할 수 있습니다.</p><button type="button" class="btn btn-primary" aria-label="Update"> 업데이트 </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">검색 결과가 없습니다.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/ko.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>

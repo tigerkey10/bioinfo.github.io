@@ -1,0 +1,1129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/regressor/</loc>
+      
+        <lastmod>2022-08-13T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/classifier/</loc>
+      
+        <lastmod>2022-08-13T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/boosting/</loc>
+      
+        <lastmod>2022-08-09T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/ensemble/</loc>
+      
+        <lastmod>2022-08-08T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/decision_tree/</loc>
+      
+        <lastmod>2022-08-03T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/bfs_dfs_clustering_fpgrowth_algorithms/</loc>
+      
+        <lastmod>2022-07-29T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/page_rank_algorithm/</loc>
+      
+        <lastmod>2022-07-25T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/graph/</loc>
+      
+        <lastmod>2022-07-25T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/designing_algorithms/</loc>
+      
+        <lastmod>2022-07-22T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/algorithm_theory/</loc>
+      
+        <lastmod>2022-07-22T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/search_algorithm/</loc>
+      
+        <lastmod>2022-07-21T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/algorithms/</loc>
+      
+        <lastmod>2022-07-20T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/epitope/</loc>
+      
+        <lastmod>2022-07-12T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/protein-structure/</loc>
+      
+        <lastmod>2022-07-10T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/image_segmentation/</loc>
+      
+        <lastmod>2022-04-26T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/knowledge_distillation/</loc>
+      
+        <lastmod>2022-04-25T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/cnn/</loc>
+      
+        <lastmod>2022-02-28T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/prim_algorithm/</loc>
+      
+        <lastmod>2022-02-19T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/graph_dfs/</loc>
+      
+        <lastmod>2022-02-16T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/quick_sort/</loc>
+      
+        <lastmod>2022-02-10T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/heap_merge_sort/</loc>
+      
+        <lastmod>2022-02-07T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/machine_learning_basic/</loc>
+      
+        <lastmod>2022-02-04T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/sort_series/</loc>
+      
+        <lastmod>2022-02-03T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/sort/</loc>
+      
+        <lastmod>2022-02-01T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/AVL_tree/</loc>
+      
+        <lastmod>2022-01-29T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/binary_search_tree/</loc>
+      
+        <lastmod>2022-01-27T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/keras_problems/</loc>
+      
+        <lastmod>2022-01-24T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/binary_heap/</loc>
+      
+        <lastmod>2022-01-22T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/tree_series/</loc>
+      
+        <lastmod>2022-01-20T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/keras_with_mnist/</loc>
+      
+        <lastmod>2022-01-18T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/stack_deque_utilization/</loc>
+      
+        <lastmod>2022-01-17T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/stack_que_deck/</loc>
+      
+        <lastmod>2022-01-12T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/regression/</loc>
+      
+        <lastmod>2022-01-11T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/mapping_type/</loc>
+      
+        <lastmod>2022-01-07T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/sequence_type_data_structure/</loc>
+      
+        <lastmod>2022-01-07T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/list_comprehension/</loc>
+      
+        <lastmod>2022-01-05T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/data_structure/</loc>
+      
+        <lastmod>2022-01-04T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/regression_analysis/</loc>
+      
+        <lastmod>2021-10-04T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/confidence_interval/</loc>
+      
+        <lastmod>2021-10-02T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/binary_distribution_normal_estimation/</loc>
+      
+        <lastmod>2021-10-01T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/conditional_distribution/</loc>
+      
+        <lastmod>2021-09-20T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/lambda_function_with_if/</loc>
+      
+        <lastmod>2021-09-19T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/characteristics_of_percentage/</loc>
+      
+        <lastmod>2021-09-19T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/iterable_object_and_generator/</loc>
+      
+        <lastmod>2021-09-15T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/percentage_theory_recap/</loc>
+      
+        <lastmod>2021-09-14T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/linear_quadratic_programming/</loc>
+      
+        <lastmod>2021-09-08T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/global_convex_optimization/</loc>
+      
+        <lastmod>2021-09-08T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/optimization_theory/</loc>
+      
+        <lastmod>2021-09-06T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/newton_calculus/</loc>
+      
+        <lastmod>2021-08-30T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/tensor_calculus/</loc>
+      
+        <lastmod>2021-08-29T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/sympy_calculus/</loc>
+      
+        <lastmod>2021-08-27T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/useful_numpy_commands/</loc>
+      
+        <lastmod>2021-08-25T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/function_basic/</loc>
+      
+        <lastmod>2021-08-25T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/PCA/</loc>
+      
+        <lastmod>2021-08-21T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/eigen_characteristic/</loc>
+      
+        <lastmod>2021-08-19T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/coordinance_and_conversion/</loc>
+      
+        <lastmod>2021-08-17T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/vector_in_geometry/</loc>
+      
+        <lastmod>2021-08-16T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/mutual_information/</loc>
+      
+        <lastmod>2021-08-15T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/distribution_and_entropy/</loc>
+      
+        <lastmod>2021-08-11T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/scipy_package_estimation/</loc>
+      
+        <lastmod>2021-08-09T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/basian_estimation/</loc>
+      
+        <lastmod>2021-08-07T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/estimation/</loc>
+      
+        <lastmod>2021-08-04T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/betta_gamma_diliclet_distribution/</loc>
+      
+        <lastmod>2021-07-26T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/F_distribution_and_others/</loc>
+      
+        <lastmod>2021-07-25T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/normal_distribution/</loc>
+      
+        <lastmod>2021-07-21T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/clt/</loc>
+      
+        <lastmod>2021-07-21T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/pearson/</loc>
+      
+        <lastmod>2021-07-21T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/covariance/</loc>
+      
+        <lastmod>2021-06-30T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/random_variable_vector_and_others/</loc>
+      
+        <lastmod>2021-06-28T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/random_variable/</loc>
+      
+        <lastmod>2021-06-27T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/sample_moments/</loc>
+      
+        <lastmod>2021-06-26T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/baysian/</loc>
+      
+        <lastmod>2021-06-24T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/percentage_recap2/</loc>
+      
+        <lastmod>2021-06-23T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/percentage_recap/</loc>
+      
+        <lastmod>2021-06-22T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>https://kibeomkim.me/posts/data_visualization/</loc>
+      
+        <lastmod>2021-06-21T00:00:00+09:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+</urlset>
