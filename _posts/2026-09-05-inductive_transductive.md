@@ -1,3 +1,26 @@
+---
+title : "[기록] Inductive & Transductive on Hypergraphs"
+excerpt : "공부한 내용 기록"
+
+categories : 
+- computer science
+- machine learning
+- hypergraph
+- study 
+
+tags : 
+- [ML, DL, Hypergraph, study]
+
+toc : true 
+toc_sticky : true 
+use_math : true
+
+date : 2026-09-05
+last_modified_at : 2026-09-05
+
+---
+
+
 2026.09.05 기록.
 
 - Inductive learning (=model)
