@@ -4,8 +4,7 @@ excerpt : "공부한 내용 기록"
 
 categories : 
 - computer science
-- machine learning
-- hypergraph
+- algorithm
 - study 
 
 tags : 
